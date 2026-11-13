@@ -124,6 +124,39 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 @keyframes nudge{0%,100%{box-shadow:0 0 0 0 rgba(255,244,220,.75)}50%{box-shadow:0 0 0 7px rgba(255,244,220,0)}}
 .ghost{position:fixed;z-index:50;pointer-events:none;width:64px;transform:translate(-50%,-60%)}
 
+/* voice shelf */
+.grp.you{grid-column:1/-1}
+.yourow{display:flex;gap:10px;align-items:stretch}
+.yourow .chip{flex:0 0 96px}
+.youside{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:8px}
+.youside p{margin:0;font-size:13px;color:var(--muted)}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pillb{border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px}
+.pillb[aria-pressed="true"]{background:var(--chuna);color:var(--ink);border-color:var(--chuna)}
+.btn.sm{align-self:flex-start;padding:6px 11px;font-size:12.5px}
+.btn.hot{background:var(--g1);color:var(--ink);border-color:var(--ink);font-weight:700;box-shadow:0 3px 0 var(--g2)}
+.btn:disabled{opacity:.6}
+.meter{height:14px;border-radius:999px;background:var(--ink);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--rani);border-radius:999px;transition:width .1s linear}
+.meter.thin{height:6px}.meter.thin i{width:100%;background:var(--mor);transform-origin:0 50%;transform:scaleX(0);transition:transform .08s}
+.pubbar{margin:0;font-size:13px;background:var(--panel);border:2px solid var(--g1);border-radius:12px;padding:7px 12px;color:var(--chuna)}
+.pubbar b{color:var(--g1)}
+
+/* chart */
+.sech{font-family:var(--display);font-weight:800;font-size:24px;margin:0 0 8px;color:var(--haldi)}
+.clist{display:flex;flex-direction:column;gap:6px}
+.crow{display:flex;align-items:center;gap:10px;border:2px solid var(--line);background:var(--panel);border-radius:14px;padding:6px 10px;text-align:left;width:100%;min-width:0}
+.crow:hover{border-color:var(--chuna)}
+.crow .rk{font-family:var(--display);font-weight:800;font-size:22px;color:var(--haldi);flex:0 0 24px;text-align:center}
+.crow .faces{display:flex;flex:0 0 auto}
+.crow .faces svg{width:32px;height:32px;margin-left:-8px;border-radius:50%;background:var(--ink);overflow:hidden;transform:none}
+.crow .faces svg:first-child{margin-left:0}
+.crow .cn{flex:1;min-width:0;display:flex;flex-direction:column}
+.crow .cn b{font-size:14px;line-height:1.2;overflow-wrap:anywhere}
+.crow .cn i{font-style:normal;font-size:12px;color:var(--muted)}
+.crow .pl{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--haldi);color:var(--ink);display:grid;place-items:center;font-size:12px}
+.emptyc{margin:0;font-size:13.5px;color:var(--muted);border:2px dashed var(--line);border-radius:14px;padding:12px}
+
 /* share sheet */
 .sheet{position:fixed;inset:0;z-index:40;background:rgba(10,5,26,.82);display:none;align-items:center;justify-content:center;padding:16px}
 .sheet.show{display:flex}
@@ -170,12 +203,17 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
     </header>
     <div class="cards" id="cards" style="margin-top:16px"></div>
     <p class="soonrow" style="margin-top:14px">Coming soon: <span id="soon" style="display:contents"></span></p>
+    <section id="homechart" style="margin-top:22px" hidden>
+      <h2 class="sech">Top bands this week</h2>
+      <div class="clist" id="homelist"></div>
+    </section>
   </main>
 
   <main id="band" hidden>
     <div class="bar">
       <button class="back" id="back">‹ Genres</button>
-      <div><h2 id="gtitle"></h2><p id="gtag"></p></div>
+      <div style="flex:1;min-width:0"><h2 id="gtitle"></h2><p id="gtag"></p></div>
+      <button class="back" id="top10">🏆 Top 10</button>
     </div>
     <div class="dock" style="margin-top:8px">
       <section class="stage" id="stage" aria-label="Band stage">
@@ -191,6 +229,7 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
         <button class="btn" id="shr">Share</button>
       </div>
     </div>
+    <p class="pubbar" id="pubbar" style="margin-top:10px" hidden></p>
     <p class="hint" id="hint" style="margin-top:10px"></p>
     <div class="troph" id="troph" aria-label="Secret combos" style="margin-top:10px"></div>
     <div class="tray" id="tray" style="margin-top:12px"></div>
@@ -205,9 +244,34 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
     <div class="row">
       <button class="btn" id="rename">New name</button>
       <button class="btn" id="copylink">Copy link</button>
+      <button class="btn" id="story">Story card</button>
+    </div>
+    <div class="row">
+      <button class="btn hot" id="publish">Publish to chart</button>
       <button class="btn" id="closesheet">Close</button>
     </div>
-    <p>The link opens this exact band for anyone you send it to.</p>
+    <p id="pubnote"></p>
+  </div>
+</div>
+<div class="sheet" id="recsheet" role="dialog" aria-modal="true" aria-labelledby="rectitle">
+  <div class="pcard">
+    <h3 id="rectitle">Record your Billi</h3>
+    <p id="recmsg" style="font-size:15px;color:var(--chuna)"></p>
+    <div class="meter"><i id="recbar"></i></div>
+    <div class="meter thin"><i id="reclvl"></i></div>
+    <div class="row">
+      <button class="btn hot" id="recgo">Start recording</button>
+      <button class="btn" id="reccancel">Cancel</button>
+    </div>
+    <p>Your voice stays on this phone. It is never uploaded, and it is not part of links or the chart.</p>
+  </div>
+</div>
+<div class="sheet" id="chartsheet" role="dialog" aria-modal="true" aria-labelledby="charttitle">
+  <div class="pcard">
+    <h3 id="charttitle"></h3>
+    <div class="clist" id="chartlist"></div>
+    <p>A listen counts once per phone, after 15 seconds of play. The chart resets every Monday.</p>
+    <div class="row"><button class="btn" id="chartclose">Close</button></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status"><span id="toastmsg"></span></div>
