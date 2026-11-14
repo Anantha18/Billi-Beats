@@ -35,7 +35,7 @@ export default {
     play:chords(32,4,[[2,[0,2,4],1],[6,[0,2,4],1],[10,[0,2,4],1],[14,[0,2,4],1],[18,[-2,0,2],1],[22,[-2,0,2],1],[26,[-1,1,3],1],[30,[-1,1,3],1]],(t,o,fs,d)=>fs.forEach(f=>V.lead(t,o,f,d*.9,.045)))},
    {id:'mast',name:'Mast Malang',fur:'#e8792e',fur2:'#b9541a',belly:'#f8d2a6',y0:30,hw:32,er:12,pat:'stripe',tail:1,acc:['longhair:#5a2a10','scarf:#e63946','chain2'],prop:'shaker',pc:'#3ddc97',ex:'manic',quirk:'hop',rev:.35,
     play:at(32,{4:ha,12:ha,20:ha,27:ha,28:(t,o)=>V.vox(t,o,294,.36,'a','o',.42,392)})},
-   {id:'hum',name:'Humming Hamza',fur:'#4b5d7a',fur2:'#33415a',belly:'#8fa0bd',y0:54,hw:35,er:10.5,cloth:{c:'#fff4dc',m:'kurta'},acc:['topi:#fff'],ex:'sleepy',quirk:'yawn',rev:.5,
+   {id:'hum',name:'Humming Hamza',fur:'#4b5d7a',fur2:'#33415a',belly:'#8fa0bd',y0:54,hw:35,er:10.5,cloth:{c:'#3ddc97',m:'kurta'},acc:['scarf:#ffc21a'],ex:'shy',quirk:'tilt',rev:.5,
     play:mel(32,2,[[0,7,7.5],[8,7,7.5],[16,5,7.5],[24,6,7.5]],(t,o,f,d)=>V.vox(t,o,f,d,'m','o',.26))}
   ],
   combos:[

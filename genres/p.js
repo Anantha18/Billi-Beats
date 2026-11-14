@@ -31,7 +31,7 @@ export default {
     play:drum('K..t..K.t..K..t. K..t..K.t..K.ttt',{K:(t,o)=>V.kick(t,o,.75,130,55,.22),t:(t,o)=>V.tak(t,o,.4,700,.05)})},
    {id:'shaker',name:'Shaker Shreya',fur:'#f6d046',fur2:'#d99a1f',belly:'#fff0b8',y0:66,hw:27,er:11.5,pat:'stripe',tail:1,acc:['crown'],prop:'shaker',pc:'#ff8fab',ex:'star',quirk:'hop',rev:.1,
     play:drum('sSsSsSsSsSsSsSsS sSsSsSsSsSsSsSsS',{s:(t,o)=>V.shk(t,o,.13,.05),S:(t,o)=>V.shk(t,o,.22,.06)})},
-   {id:'sub',name:'Sub Simmi',fur:'#262026',ink:'#0c0a0c',iris:'#ff8fab',lidc:'#262026',y0:48,hw:33,er:11.5,cloth:{c:'#ff8fab',m:'hoodie'},acc:['headphones:#7b5cff'],prop:'pads',ex:'side',quirk:'tilt',rev:0,
+   {id:'sub',name:'Sub Simmi',fur:'#262026',ink:'#0c0a0c',iris:'#ff8fab',lidc:'#262026',y0:48,hw:33,er:11.5,cloth:{c:'#ff8fab',m:'hoodie'},acc:['cap:#7b5cff'],prop:'boombox',ex:'side',quirk:'tilt',rev:0,
     play:mel(32,2,R.map((r,i)=>[i*8,r,7.5]),(t,o,f,d)=>V.sub(t,o,f*2,d*.95,.5))},
    {id:'cello',name:'Cello Charu',fur:'#efe2c8',mask:'#5a4032',iris:'#8fd3ff',y0:22,hw:27,er:10,tail:1,cloth:{c:'#b3274a',m:'vest'},acc:['specs','bowtie:#ff8fab'],prop:'strings',pc:'#8a3a1c',ex:'grumpy',quirk:'tail',rev:.4,
     play:mel(32,3,[[0,0,4],[4,2,4],[8,4,4],[12,1,4],[16,5,4],[20,4,4],[24,3,4],[28,1,4]],(t,o,f,d,p)=>V.bow(t,o,f,d*.95,.17,p))},

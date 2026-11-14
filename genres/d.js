@@ -23,7 +23,7 @@ export default {
     play:mel(32,3,[[0,4,2],[2,6,2],[4,7,4],[10,6],[11,4],[12,2,4],[16,3,2],[18,4,2],[20,6,4],[26,4],[27,2],[28,0,4]],(t,o,f,d)=>{V.cons(t,o,'d',.14);V.vox(t+.01,o,f,d*.9,'a','a',.3);})},
    {id:'hero',name:'Hero Heeralal',fur:'#262026',ink:'#0c0a0c',pat:'tux',iris:'#b6f06a',lidc:'#262026',y0:16,hw:27,er:10.5,tail:1,acc:['sidepart:#0c0a0c','collar'],prop:'rose',ex:'smug',quirk:'tilt',rev:.3,
     play:at(32,{7:aha,15:(t,o)=>V.whistle(t,o,1500,2400,.2),23:aha,30:(t,o)=>V.whistle(t,o,2400,1500,.28)})},
-   {id:'tamb',name:'Tambourine Tina',fur:'#fbf6ee',fur2:'#c9a7d8',patch:'#c9a7d8',y0:44,hw:27,er:11,tail:1,cloth:{c:'#ffd23f',m:'polka'},acc:['bouffant:#5a3520','flower:#ff3d86'],prop:'manjira',ex:'happy',quirk:'hop',rev:.15,
+   {id:'tamb',name:'Tambourine Tina',fur:'#fbf6ee',fur2:'#c9a7d8',patch:'#c9a7d8',y0:44,hw:27,er:11,tail:1,cloth:{c:'#ffd23f',m:'polka'},acc:['longhair:#5a3520','flower:#ff3d86'],prop:'manjira',ex:'happy',quirk:'hop',rev:.15,
     play:drum('j.j.J.j.j.j.J.jj j.j.J.j.j.jjJ.jj',{j:(t,o)=>V.jing(t,o,.2,.06),J:(t,o)=>V.jing(t,o,.36,.12)})},
    {id:'taali',name:'Taali Tillu',fur:'#9aa0a8',fur2:'#6c727a',belly:'#d8dce2',y0:64,hw:31,er:11.5,pat:'stripe',cloth:{c:'#ff6a2b',m:'stripe',c2:'#ffd23f'},acc:['sidepart'],prop:'clap',ex:'star',quirk:'hop',rev:.2,
     play:drum('....c.......c.c. ....c.......cccc',{c:(t,o)=>V.clap(t,o,.5)})},

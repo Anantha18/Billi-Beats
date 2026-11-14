@@ -21,13 +21,21 @@ export const GENRES=[
 const SHELF=['Beat','Bass','Tune','Voice'],SHEX=['#ff6a2b','#12c2b0','#ffc21a','#ff3d86'];
 const EMPTY=()=>[-1,-1,-1,-1,-1,-1,-1];
 const cache={};
+// Each string player gets a drawing of its own instrument.
+const INST={'s.solo':'guitar','s.riff':'guitar','p.gtr':'guitar','d.wah':'guitar','s.bass':'guitar','p.bass':'guitar','c.bass':'guitar','d.octave':'guitar','p.uke':'guitar',
+  'r.sitar':'sitar','d.sitar':'sitar','g.tara':'sitar','c.veena':'sitar','s.rubab':'sitar','c.tambura':'sitar','f.tanpura':'sitar','s.drone':'sitar',
+  'c.violin':'violin','d.strings':'violin','f.sarangi':'violin','s.sarangi':'violin','p.cello':'upright','d.walk':'upright'};
 let slotEls=[],adds=0,beatFlip=false,pub=null,heard=0,listenSent=false;
 
 export async function loadGenre(k){
   if(cache[k])return cache[k];
   const p=(await import(`../genres/${k}.js`)).default;
   // Cats 0-7 keep their original positions so old links still work; 8-15 are the second pair on each shelf.
-  p.cats.forEach((c,i)=>{c.i=i;c.g=Math.floor((i%8)/2);});
+  p.combos.forEach(cb=>{cb.hint='Try '+cb.need.map(id=>['beat','bass','tune','voice'][Math.floor((p.cats.findIndex(c=>c.id===id)%8)/2)]).join(' + ');});
+  p.cats.forEach((c,i)=>{c.i=i;c.g=Math.floor((i%8)/2);if(INST[k+'.'+c.id])c.prop=INST[k+'.'+c.id];});
+  // Keep heavy-lidded faces rare so most of the band looks lively: at most three per genre.
+  let lidded=0;const lively=['happy','star','shy','manic'];
+  p.cats.forEach((c,i)=>{if(['sleepy','grumpy','side'].indexOf(c.ex)>=0&&++lidded>3)c.ex=lively[i%4];});
   const v=voiceCat();v.i=VOICE_I;v.g=4;p.cats.push(v);
   cache[k]=p;return p;
 }
@@ -72,7 +80,7 @@ function buildStage(){
   const band=$('lineup');band.innerHTML='';slotEls=[];
   for(let i=0;i<7;i++){
     const d=document.createElement('div');d.className='slot';d.dataset.s=i;
-    d.innerHTML=`<button class="who" id="who${i}"></button><button class="x" id="x${i}" aria-label="Remove">✕</button>`;
+    d.innerHTML=`<button class="who" id="who${i}"></button><button class="x" id="x${i}" aria-label="Remove from stage">✕</button>`;
     band.appendChild(d);slotEls.push(d);
     d.querySelector('.who').addEventListener('click',()=>{
       if(S.slots[i]<0){unlockAudio();const c=document.querySelector('.chip.nudge')||document.querySelector('.chip:not(.on)');if(c)c.scrollIntoView({block:'center',behavior:'smooth'});return;}
@@ -87,12 +95,13 @@ function renderSlot(i){
   const w=el.querySelector('.who');
   w.innerHTML=`<span class="bobw">${c?catSVG(c,S.muted[i]?'muted':'idle'):emptySVG()}</span><span class="nm">${c?c.name:''}</span>`;
   w.setAttribute('aria-label',c?(c.name+(S.muted[i]?', muted. Tap to unmute':'. Tap to mute')):'Empty spot');
+  el.querySelector('.x').setAttribute('aria-label',c?'Remove '+c.name:'Remove');
 }
 export function renderAll(){
   for(let i=0;i<7;i++)renderSlot(i);
   const empty=S.slots.every(x=>x<0);
   document.querySelectorAll('.chip').forEach(c=>{const i=+c.dataset.i;c.classList.toggle('on',S.slots.indexOf(i)>=0);c.classList.toggle('nudge',empty&&i===0);});
-  $('hint').textContent=empty?`Start the band: tap ${S.pack.cats[0].name} below, then add more cats.`:'Tap a cat on stage to mute it. Three secret combos are hiding in this genre.';
+  $('hint').textContent=empty?`Start the band: tap ${S.pack.cats[0].name} below, then add more cats.`:'Tap a cat on stage to mute it, then ✕ to send it off. Three secret combos are hiding here.';
   syncBuses();
 }
 function changed(){if(pub&&pub.code!==pubCode()){pub=null;renderPubBar();}}
@@ -185,7 +194,7 @@ function buildTrophies(){
   const p=S.pack,box=$('troph');box.innerHTML='';
   p.combos.forEach(cb=>{
     const has=!!S.got[p.key+cb.id],d=document.createElement('div');d.className='tro'+(has?' got':'');
-    d.innerHTML=`<span class="faces">${cb.need.map(id=>faceSVG(p.cats.find(c=>c.id===id))).join('')}</span><span>${has?cb.name:'Secret combo'}</span>`;
+    d.innerHTML=has?`<span class="faces">${cb.need.map(id=>faceSVG(p.cats.find(c=>c.id===id))).join('')}</span><span>${cb.name}</span>`:`<span class="faces q"><i>?</i><i>?</i><i>?</i></span><span>${cb.hint||'Secret combo'}</span>`;
     d.setAttribute('aria-label',has?cb.name+', found':'Secret combo, not found yet');box.appendChild(d);
   });
 }
@@ -244,7 +253,7 @@ function openShare(){
   $('sharecats').innerHTML=S.slots.filter(s=>s>=0).map(s=>catSVG(p.cats[s])).join('');
   $('sharebg').innerHTML=backdrop(p.theme.bg);
   renderShare();
-  $('sheet').classList.add('show');$('closesheet').focus();track('share_open',{genre:p.key});
+  $('sheet').classList.add('show');$('bandname').focus();track('share_open',{genre:p.key});
 }
 async function doPublish(){
   const code=pubCode();

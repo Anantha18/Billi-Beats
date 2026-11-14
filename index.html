@@ -51,8 +51,8 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 
 /* band page */
 .bar{display:flex;align-items:center;gap:10px}
-.back{border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13.5px;flex:0 0 auto}
-.bar h2{font-family:var(--display);font-weight:800;font-size:clamp(24px,7vw,36px);line-height:1;margin:0;color:var(--g1)}
+.back{min-height:40px;border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13.5px;flex:0 0 auto}
+.bar h2{font-family:var(--display);font-weight:800;font-size:clamp(20px,6.2vw,36px);line-height:1.05;margin:0;color:var(--g1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
 .dock{position:sticky;top:0;z-index:20;background:var(--ink);margin:0 -16px;padding:4px 16px 10px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 14px -10px rgba(0,0,0,.7)}
 .stage{position:relative;border-radius:16px;overflow:hidden;margin:6px;padding:16px 4px 8px;box-shadow:0 0 0 3px var(--g1),0 0 0 6px var(--g2)}
@@ -67,9 +67,10 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .slot:nth-child(2n) .bobw{animation-delay:-.9s}.slot:nth-child(3n) .bobw{animation-delay:-1.7s}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 .slot.drop .who{background:rgba(255,244,220,.25)}
-.nm{font-size:11px;font-weight:700;line-height:1.1;text-align:center;min-height:26px;padding:3px 2px 0;color:var(--chuna);text-shadow:0 1px 0 var(--ink),0 0 6px var(--ink)}
-.x{position:absolute;top:-6px;right:2%;width:24px;height:24px;border-radius:50%;border:2px solid var(--ink);background:var(--chuna);color:var(--ink);font-size:13px;font-weight:700;line-height:1;padding:0;display:none}
-.slot.on .x{display:block}
+.nm{font-size:11px;font-weight:700;line-height:1.1;text-align:center;margin-top:2px;padding:2px 4px;border-radius:6px;color:var(--chuna);background:rgba(23,14,51,.8)}
+.nm:empty{display:none}
+.x{position:absolute;top:2px;right:0;width:28px;height:28px;border-radius:50%;border:2px solid var(--ink);background:var(--chuna);color:var(--ink);font-size:13px;font-weight:700;line-height:1;padding:0;display:none}
+.slot.on.muted .x,.slot.on:hover .x,.slot.on:focus-within .x{display:block}
 .slot.muted .bobw{filter:grayscale(.85) brightness(.75)}
 #fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .banner{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;padding:12px;background:rgba(23,14,51,.5)}
@@ -101,7 +102,7 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .play{border:3px solid var(--ink);background:var(--g1);color:var(--ink);font-family:var(--display);font-weight:800;font-size:20px;line-height:1.1;padding:7px 22px;border-radius:999px;box-shadow:0 4px 0 var(--g2);min-width:112px}
 .play:active{transform:translateY(3px);box-shadow:0 1px 0 var(--g2)}
-.btn{border:2px solid var(--line);background:var(--panel);padding:8px 13px;border-radius:999px;font-weight:600;font-size:13.5px}
+.btn{min-height:40px;border:2px solid var(--line);background:var(--panel);padding:8px 13px;border-radius:999px;font-weight:600;font-size:13.5px}
 .btn:hover{border-color:var(--chuna)}
 .hint{margin:0;font-size:13px;color:var(--muted)}
 .troph{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -109,7 +110,8 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .tro .faces{display:flex;flex:0 0 auto}
 .tro .faces svg{width:30px;height:30px;margin-left:-6px;border-radius:50%;background:var(--panel);overflow:hidden}
 .tro .faces svg:first-child{margin-left:0}
-.tro:not(.got) .faces svg{filter:brightness(0) invert(.35)}
+.tro .faces.q i{width:26px;height:26px;margin-left:-6px;border-radius:50%;background:var(--ink);border:2px solid var(--line);display:grid;place-items:center;font-style:normal;font-weight:800;color:var(--muted)}
+.tro .faces.q i:first-child{margin-left:0}
 .tro.got{border-style:solid;border-color:var(--haldi);background:var(--haldi);color:var(--ink);font-weight:700}
 
 /* shelves */
@@ -120,7 +122,9 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .chip{touch-action:manipulation;user-select:none;-webkit-user-select:none;border:2px solid var(--c);background:var(--panel);border-radius:14px;padding:5px 3px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
 .chip svg{width:100%;max-width:66px;aspect-ratio:1;height:auto;overflow:hidden;transform:none;transition:none}
 .chip span{font-size:11px;line-height:1.12;font-weight:600;text-align:center;overflow-wrap:break-word;max-width:100%;min-height:25px;display:flex;align-items:center}
-.chip.on{background:var(--c);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.chip{position:relative}
+.chip.on{box-shadow:0 0 0 3px var(--c),0 0 14px var(--c)}
+.chip.on::after{content:'✓';position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:var(--c);color:var(--ink);font-weight:800;font-size:12px;line-height:20px;text-align:center}
 .chip.nudge{animation:nudge 1.1s ease-in-out infinite;border-color:var(--chuna)}
 @keyframes nudge{0%,100%{box-shadow:0 0 0 0 rgba(255,244,220,.75)}50%{box-shadow:0 0 0 7px rgba(255,244,220,0)}}
 .ghost{position:fixed;z-index:50;pointer-events:none;width:64px;transform:translate(-50%,-60%)}
@@ -164,7 +168,7 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .pcard{background:var(--panel);border:3px solid var(--g1);border-radius:18px;max-width:420px;width:100%;max-height:100%;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .poster{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:1.6/1}
 .poster .bg{position:absolute;inset:0;width:100%;height:100%}
-.poster .cats{position:absolute;left:2%;right:2%;bottom:6%;height:74%;display:flex;justify-content:center;align-items:flex-end}
+.poster .cats{position:absolute;left:2%;right:2%;bottom:4%;height:88%;display:flex;justify-content:center;align-items:flex-end}
 .poster .cats svg{height:100%;width:auto;flex:0 1 auto;min-width:0;transform:none}
 .pcard h3{font-family:var(--display);font-weight:800;font-size:25px;margin:0;color:var(--g1);line-height:1.05;text-wrap:balance}
 .pcard p{margin:0;font-size:13px;color:var(--muted)}
@@ -176,11 +180,11 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
   .app{gap:10px;padding-top:10px}
   .stage{padding:12px 2px 4px}
   .slot .tx{filter:none}
-  .nm{font-size:8.5px;min-height:20px;padding-top:2px}
-  .x{width:18px;height:18px;font-size:10px;right:-2px;top:-8px;border-width:1.5px}
+  .nm{font-size:9.5px;padding:1px 2px}
+  .x{width:26px;height:26px;font-size:12px;right:-4px;top:0}
   .ctl{gap:5px;flex-wrap:nowrap}
   .ctl button{flex:0 0 auto}
-  .play{font-size:17px;padding:5px 14px;min-width:84px;box-shadow:0 3px 0 var(--g2)}
+  .play{font-size:17px;padding:5px 14px;min-width:84px;min-height:40px;box-shadow:0 3px 0 var(--g2)}
   .btn{padding:6px 10px;font-size:12.5px}
   .hint{font-size:12px}
   .tro{font-size:10.5px;line-height:1.15;padding:5px 3px;min-height:42px;flex-direction:column;gap:2px;text-align:center}
@@ -240,11 +244,11 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
   <div class="pcard">
     <div class="poster"><div id="sharebg"></div><div class="cats" id="sharecats"></div></div>
     <p id="sharegenre"></p>
-    <h3 id="bandname"></h3>
+    <h3 id="bandname" tabindex="-1"></h3>
     <div class="row">
       <button class="btn" id="rename">New name</button>
+      <button class="btn hot" id="story">Story card</button>
       <button class="btn" id="copylink">Copy link</button>
-      <button class="btn" id="story">Story card</button>
     </div>
     <div class="row">
       <button class="btn hot" id="publish">Publish to chart</button>

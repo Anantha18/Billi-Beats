@@ -11,7 +11,7 @@ export const DEFS=`<svg width="0" height="0" style="position:absolute" aria-hidd
 const EX={
   happy:{pup:.42,mouth:'w'},
   side:{lid:.42,look:[.6,.05],mouth:'flat'},
-  smug:{lid:.34,look:[.3,0],mouth:'smirk',brow:'one'},
+  smug:{wink:1,lid:.16,look:[.3,0],mouth:'smirk',brow:'one'},
   star:{pup:.56,star:1,mouth:'smile'},
   grumpy:{lid:.22,brow:'angry',mouth:'frown',look:[0,.15]},
   shy:{look:[-.2,.5],blush:1,mouth:'small',pup:.46},
@@ -31,8 +31,8 @@ export function emptySVG(){
   return `<svg viewBox="-8 -30 116 192" aria-hidden="true"><path d="${bodyPath(C)}" fill="rgba(255,244,220,.07)" stroke="#fff4dc" stroke-opacity=".55" stroke-width="2.4" stroke-dasharray="6 5" stroke-linejoin="round"/><circle cx="50" cy="104" r="13" fill="#fff4dc"/><path d="M50 97v14M43 104h14" stroke="#170e33" stroke-width="3.4" stroke-linecap="round"/></svg>`;
 }
 export function faceSVG(o){
-  const C=geom(o),h=C.er+86,w=2*C.hw+26,s=Math.max(w,h);
-  return inner(o,'idle',C,`${50-s/2} ${C.y0-32-(s-h)/2} ${s} ${s}`,true);
+  const C=geom(o),h=C.er+100,w=2*C.hw+26,s=Math.max(w,h);
+  return inner(o,'idle',C,`${50-s/2} ${C.y0-46-(s-h)/2} ${s} ${s}`,true);
 }
 export function catSVG(o,st){return inner(o,st||'idle',geom(o),'-8 -30 116 192',false);}
 
@@ -40,6 +40,7 @@ function inner(o,st,C,vb,faceOnly){
   const {cx,y0,hw,er,ey,cy,ink,id}=C,body=bodyPath(C),E=EX[o.ex]||EX.happy;
   let s=`<svg viewBox="${vb}" class="cs q-${o.quirk||'tail'}" aria-hidden="true"><defs><clipPath id="${id}c"><path d="${body}"/></clipPath>${patDefs(C)}</defs><g class="tx"><g class="bob"><g class="body">`;
   if(o.tail&&!faceOnly) s+=`<g class="tail"><path d="M${cx+hw-6},146 C${cx+hw+20},146 ${cx+hw+26},110 ${cx+hw+12},96" fill="none" stroke="${ink}" stroke-width="10" stroke-linecap="round"/><path d="M${cx+hw-6},146 C${cx+hw+20},146 ${cx+hw+26},110 ${cx+hw+12},96" fill="none" stroke="${o.fur}" stroke-width="6" stroke-linecap="round"/></g>`;
+  if(lum(o.fur)<.2) s+=`<path d="${body}" fill="none" stroke="#fff4dc" stroke-width="6" stroke-linejoin="round" opacity=".85"/>`;
   s+=`<path d="${body}" fill="${o.fur}"/><g clip-path="url(#${id}c)">`;
   if(o.belly) s+=`<ellipse cx="${cx}" cy="${Math.max(cy+30,118)}" rx="${hw*.58}" ry="34" fill="${o.belly}"/>`;
   if(o.pat==='stripe'){for(let k=0;k<4;k++){const y=y0+58+k*15;s+=`<path d="M${cx-hw-2},${y} q11,2 15,-3 M${cx+hw+2},${y} q-11,2 -15,-3" stroke="${o.fur2}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;}
@@ -64,10 +65,11 @@ function inner(o,st,C,vb,faceOnly){
   return s+`</g></g></g></svg>`;
 }
 
+function lum(h){const n=parseInt(h.slice(1),16),c=[n>>16,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*c[0]+.7152*c[1]+.0722*c[2];}
 function face(C,st,E){
   const {cx,ex,ey,er,ny,hw,o,ink}=C,look=o.look||E.look||[0,0],shut=st==='muted',hidden=o.ex==='cool';let s='';
   [-1,1].forEach(d=>{const x=cx+d*ex,r=E.uneven&&d>0?er*.82:er;
-    if(shut){s+=`<path d="M${x-er+2},${ey} Q${x},${ey+7} ${x+er-2},${ey}" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`;return;}
+    if(shut||(E.wink&&d<0)){s+=shut?`<path d="M${x-er+2},${ey} Q${x},${ey+7} ${x+er-2},${ey}" fill="none" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>`:`<path d="M${x-er+2},${ey+2} Q${x},${ey-6} ${x+er-2},${ey+2}" fill="none" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`;return;}
     const lx=x+look[0]*r*.38,ly=ey+look[1]*r*.38,pr=r*(E.pup||.42)*(o.iris?1.15:1);
     s+=`<g class="eye"><circle cx="${x}" cy="${ey}" r="${r}" fill="${o.iris||'#fffdf6'}" stroke="${ink}" stroke-width="2.2"/><circle cx="${lx}" cy="${ly}" r="${pr}" fill="${ink}"/><circle cx="${lx-pr*.38}" cy="${ly-pr*.42}" r="${Math.max(1,pr*.36)}" fill="#fff"/>`;
     if(E.star) s+=`<circle cx="${lx+pr*.4}" cy="${ly+pr*.36}" r="${pr*.2}" fill="#fff"/><path d="M${lx+pr*.1},${ly-pr*.1} l1.2,-2.6 l1.2,2.6 l2.6,1.2 l-2.6,1.2 l-1.2,2.6 l-1.2,-2.6 l-2.6,-1.2 Z" fill="#fff" opacity=".9"/>`;
@@ -125,7 +127,7 @@ function cloth(C){
 
 /* ---------- accessories ---------- */
 const ACC={
-  longhair:(C,c)=>{const {cx,y0,hw,ey,ink}=C;c=c||'#241a1c';return `<path d="M${cx-hw+5},${y0+10} Q${cx-hw-2},${y0-16} ${cx},${y0-17} Q${cx+hw+2},${y0-16} ${cx+hw-5},${y0+10} Q${cx+hw*.3},${y0-2} ${cx},${y0+3} Q${cx-hw*.3},${y0-2} ${cx-hw+5},${y0+10} Z" fill="${c}" stroke="${ink}" stroke-width="2"/>${[-1,1].map(d=>`<path d="M${cx+d*(hw-4)},${y0+6} q${d*9},${24} ${d*2},${ey-y0+34} q${-d*7},-8 ${-d*5},-${ey-y0+22} Z" fill="${c}" stroke="${ink}" stroke-width="1.8" stroke-linejoin="round"/>`).join('')}`;},
+  longhair:(C,c)=>{const {cx,y0,hw,ey,ink}=C;c=c||'#241a1c';return `<path d="M${cx-hw+5},${y0+10} Q${cx-hw-2},${y0-16} ${cx},${y0-17} Q${cx+hw+2},${y0-16} ${cx+hw-5},${y0+10} Q${cx+hw*.3},${y0-2} ${cx},${y0+3} Q${cx-hw*.3},${y0-2} ${cx-hw+5},${y0+10} Z" fill="${c}" stroke="${ink}" stroke-width="2"/>${[-1,1].map(d=>`<path d="M${cx+d*(hw+1)},${y0+8} q${d*10},${24} ${d*4},${ey-y0+34} q${-d*7},-6 ${-d*6},-${ey-y0+24} Z" fill="${c}" stroke="${ink}" stroke-width="1.8" stroke-linejoin="round"/>`).join('')}`;},
   vibhuti:C=>{const {cx,y0}=C;return `<path d="M${cx-9},${y0+9} h18 M${cx-10},${y0+12.5} h20 M${cx-9},${y0+16} h18" stroke="#fff" stroke-width="1.9" stroke-linecap="round" opacity=".95"/><circle cx="${cx}" cy="${y0+12.5}" r="2.2" fill="#e0122f"/>`;},
   crown:C=>{const {cx,y0,hw,ink}=C;let s='';const cols=['#ff3d86','#ffd23f','#fff','#ff9a1f','#ff3d86','#fff','#ffd23f'];for(let i=0;i<7;i++){const a=i/6,x=cx-hw+9+a*(2*hw-18),y=y0+5-Math.sin(a*Math.PI)*7;s+=`<circle cx="${x}" cy="${y}" r="4" fill="${cols[i]}" stroke="${ink}" stroke-width="1"/><circle cx="${x}" cy="${y}" r="1.3" fill="#ffb000"/>`;}return s;},
   headband:(C,c)=>{const {cx,y0,hw,ink}=C;return `<path d="M${cx-hw+5},${y0+13} Q${cx},${y0+5} ${cx+hw-5},${y0+13} L${cx+hw-5},${y0+19} Q${cx},${y0+11} ${cx-hw+5},${y0+19} Z" fill="${c||'#e63946'}" stroke="${ink}" stroke-width="1.6"/>`;},
@@ -162,11 +164,24 @@ const ACC={
 
 /* ---------- props ---------- */
 const PROP={
+  guitar:(C,c)=>{const {cx,hw,py,ink}=C,bx=cx-6,by=py+4,nx=cx+hw+12,ny2=py-30;c=c||'#c9681c';
+    return {svg:`<path d="M${bx+6},${by-4} L${nx},${ny2}" stroke="${ink}" stroke-width="6.5" stroke-linecap="round"/><path d="M${bx+6},${by-4} L${nx},${ny2}" stroke="#5e3a22" stroke-width="4" stroke-linecap="round"/><rect x="${nx-4}" y="${ny2-7}" width="8" height="10" rx="2" fill="#3a2210" stroke="${ink}" stroke-width="1.4" transform="rotate(35 ${nx} ${ny2})"/>
+      <g transform="rotate(-28 ${bx} ${by})"><ellipse cx="${bx-5}" cy="${by+3}" rx="14" ry="12" fill="${c}" stroke="${ink}" stroke-width="2"/><ellipse cx="${bx+12}" cy="${by+1}" rx="10" ry="9" fill="${c}" stroke="${ink}" stroke-width="2"/><ellipse cx="${bx-5}" cy="${by+3}" rx="12" ry="10" fill="${c}"/><circle cx="${bx+3}" cy="${by+2}" r="3.6" fill="#2b1d17"/><path d="M${bx-14},${by+3} h8" stroke="#2b1d17" stroke-width="2"/></g>`,
+      paws:[[bx-2,by-2],[cx+hw*.75,py-17]]};},
+  sitar:(C,c)=>{const {cx,hw,py,ink}=C,gx=cx-hw*.45,gy=py+10,tx=cx+hw+18,ty=py-36;let f='';for(let i=1;i<6;i++){const a=i/6.5;f+=`<circle cx="${gx+(tx-gx)*a}" cy="${gy+(ty-gy)*a}" r="1.2" fill="#fff4dc"/>`;}
+    return {svg:`<path d="M${gx},${gy} L${tx},${ty}" stroke="${ink}" stroke-width="7" stroke-linecap="round"/><path d="M${gx},${gy} L${tx},${ty}" stroke="#8a5424" stroke-width="4.5" stroke-linecap="round"/>${f}<circle cx="${tx-4}" cy="${ty+3}" r="5.5" fill="${c||'#c9681c'}" stroke="${ink}" stroke-width="1.6"/><circle cx="${gx}" cy="${gy}" r="14" fill="${c||'#c9681c'}" stroke="${ink}" stroke-width="2"/><path d="M${gx-9},${gy-4} q9,-7 18,0" stroke="#fff4dc" stroke-width="1.4" fill="none" opacity=".7"/>`,
+      paws:[[gx+11,gy-6],[cx+hw*.8,(gy+ty)/2-3]]};},
+  violin:(C,c)=>{const {cx,hw,cy,ink}=C,vx=cx+hw*.38,vy=cy+8;c=c||'#8a3a1c';
+    return {svg:`<g transform="rotate(-55 ${vx} ${vy})"><path d="M${vx},${vy-14} q8,0 8,6 q-4,4 0,8 q0,8 -8,8 q-8,0 -8,-8 q4,-4 0,-8 q0,-6 8,-6 Z" fill="${c}" stroke="${ink}" stroke-width="1.8"/><path d="M${vx},${vy-14} v-14" stroke="#2b1d17" stroke-width="3" stroke-linecap="round"/><circle cx="${vx}" cy="${vy-29}" r="2.4" fill="#2b1d17"/></g><g class="swing"><path d="M${cx-hw-8},${cy+30} L${cx+hw*.5},${cy-2}" stroke="#2b1d17" stroke-width="2" stroke-linecap="round"/><path d="M${cx-hw-8},${cy+30} L${cx+hw*.5},${cy-2}" stroke="#f2d7a6" stroke-width=".8"/></g>`,
+      paws:[[cx-hw*.55,cy+21],[cx-hw*.05,cy+20]]};},
+  upright:(C,c)=>{const {cx,hw,py,y0,ink}=C,bx=cx+hw*.62,by=130;c=c||'#8a3a1c';
+    return {svg:`<path d="M${bx},${by-16} L${bx+4},${Math.max(y0+18,by-74)}" stroke="${ink}" stroke-width="5" stroke-linecap="round"/><path d="M${bx},${by-16} L${bx+4},${Math.max(y0+18,by-74)}" stroke="#2b1d17" stroke-width="3" stroke-linecap="round"/><path d="M${bx},${by-22} q14,0 13,10 q-4,5 0,10 q2,14 -13,14 q-15,0 -13,-14 q4,-5 0,-10 q-1,-10 13,-10 Z" fill="${c}" stroke="${ink}" stroke-width="2"/><path d="M${bx-4},${by-6} q-2,4 0,8 M${bx+4},${by-6} q2,4 0,8" stroke="#2b1d17" stroke-width="1.4" fill="none"/><g class="swing"><path d="M${cx-hw*.5},${py-2} L${bx+16},${by-4}" stroke="#2b1d17" stroke-width="2" stroke-linecap="round"/></g>`,
+      paws:[[cx-hw*.45,py-1],[bx+2,Math.max(y0+40,by-50)]]};},
   sticks:C=>{const {cx,hw,py}=C,l=cx-hw*.55,r=cx+hw*.55;return {svg:`<g class="swing"><path d="M${l},${py} L${l-8},${py-30}" stroke="#2b1d17" stroke-width="4.6" stroke-linecap="round"/><path d="M${l},${py} L${l-8},${py-30}" stroke="#e6c39a" stroke-width="2.6" stroke-linecap="round"/></g><g class="swing swing2"><path d="M${r},${py} L${r+8},${py-30}" stroke="#2b1d17" stroke-width="4.6" stroke-linecap="round"/><path d="M${r},${py} L${r+8},${py-30}" stroke="#e6c39a" stroke-width="2.6" stroke-linecap="round"/></g>`,paws:[[l,py],[r,py]]};},
   cup:(C,c)=>{const {cx,hw,py,ink}=C,x=cx+hw*.5;return {svg:`<g class="swing"><path d="M${x-8},${py-16} h16 l-2.5,15 h-11 Z" fill="${c||'#fff4dc'}" stroke="${ink}" stroke-width="1.8" stroke-linejoin="round"/><path d="M${x+8},${py-12} q7,1 5,7 q-2,3 -6,2" fill="none" stroke="${ink}" stroke-width="1.8"/><path d="M${x-3},${py-20} q-3,-4 0,-7 M${x+3},${py-20} q-3,-4 0,-7" stroke="#fff4dc" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".8"/></g>`,paws:[[cx-hw*.55,py+4],[x-1,py-2]]};},
   shaker:(C,c)=>{const {cx,hw,py,ink}=C;return {svg:[-1,1].map((d,i)=>`<g class="swing${i?' swing2':''}"><path d="M${cx+d*hw*.55},${py} v-9" stroke="#7a4a1c" stroke-width="3.4" stroke-linecap="round"/><ellipse cx="${cx+d*hw*.55}" cy="${py-16}" rx="6.5" ry="8.5" fill="${c||'#ff6a2b'}" stroke="${ink}" stroke-width="1.8"/><path d="M${cx+d*hw*.55-5},${py-17} h10" stroke="#fff4dc" stroke-width="1.6"/></g>`).join(''),paws:[[cx-hw*.55,py],[cx+hw*.55,py]]};},
   clap:C=>{const {cx,py}=C;return {svg:`<g class="swing"><path d="M${cx-3},${py-13} l-4,-6 M${cx+3},${py-13} l4,-6 M${cx},${py-14} v-7" stroke="#fff4dc" stroke-width="1.8" stroke-linecap="round" opacity=".9"/></g>`,paws:[[cx-5.5,py-3],[cx+5.5,py-3]]};},
-  mic:(C,c)=>{const {cx,hw,py,ny,ink}=C,hx=cx+hw*.5,hy=py-4;return {svg:`<path d="M${hx},${hy} L${cx+9},${ny+13}" stroke="${ink}" stroke-width="5" stroke-linecap="round"/><path d="M${hx},${hy} L${cx+9},${ny+13}" stroke="#3a3a3a" stroke-width="3" stroke-linecap="round"/><g class="swing"><circle cx="${cx+8}" cy="${ny+11}" r="5.5" fill="${c||'#bfc6cf'}" stroke="${ink}" stroke-width="1.8"/><path d="M${cx+4},${ny+10} h8 M${cx+5},${ny+13} h6" stroke="#7d8590" stroke-width=".9"/></g>`,paws:[[cx-hw*.55,py+4],[hx,hy]]};},
+  mic:(C,c)=>{const {cx,hw,py,ny,ink}=C,hx=cx+hw*.5,hy=py-4;return {svg:`<path d="M${hx},${hy} L${cx+9},${ny+13}" stroke="${ink}" stroke-width="5" stroke-linecap="round"/><path d="M${hx},${hy} L${cx+9},${ny+13}" stroke="#3a3a3a" stroke-width="3" stroke-linecap="round"/><g class="swing"><circle cx="${cx+9}" cy="${ny+10}" r="7.5" fill="#cfd6dd" stroke="${ink}" stroke-width="2"/><path d="M${cx+3},${ny+8} h12 M${cx+2.5},${ny+11.5} h13 M${cx+9},${ny+3} v14" stroke="#7d8590" stroke-width="1"/><rect x="${cx+3}" y="${ny+15}" width="12" height="3.4" rx="1" fill="${c||'#262026'}" stroke="${ink}" stroke-width="1"/></g>`,paws:[[cx-hw*.55,py+4],[hx,hy]]};},
   boombox:C=>{const {cx,py,ink}=C;return {svg:`<path d="M${cx-14},${py-12} q14,-10 28,0" fill="none" stroke="${ink}" stroke-width="2.4"/><rect x="${cx-23}" y="${py-12}" width="46" height="24" rx="3" fill="#cfd6dd" stroke="${ink}" stroke-width="2"/>${[-1,1].map(d=>`<circle cx="${cx+d*11.5}" cy="${py}" r="7.5" fill="#2b2b2b" stroke="${ink}" stroke-width="1.4"/><circle class="swing" cx="${cx+d*11.5}" cy="${py}" r="3.4" fill="#5a5a5a"/>`).join('')}<rect x="${cx-4}" y="${py-9}" width="8" height="4" rx="1" fill="#ff4fa3"/>`,paws:[[cx-24,py+2],[cx+24,py+2]]};},
   spray:C=>{const {cx,hw,py,ink}=C,x=cx+hw*.55;return {svg:`<g class="swing"><rect x="${x-4.5}" y="${py-20}" width="9" height="20" rx="2" fill="#ff4fa3" stroke="${ink}" stroke-width="1.8"/><rect x="${x-2}" y="${py-24}" width="4" height="4" fill="#fff" stroke="${ink}" stroke-width="1.2"/><circle cx="${x+6}" cy="${py-25}" r="2" fill="#ffd23f" opacity=".8"/><circle cx="${x+10}" cy="${py-28}" r="1.4" fill="#12c2b0" opacity=".8"/></g>`,paws:[[cx-hw*.55,py+4],[x,py-4]]};},
   keys:(C,c)=>{const {cx,py,ink}=C;let k='';for(let i=0;i<7;i++)k+=`<rect x="${cx-19+i*5.4}" y="${py-1}" width="4.6" height="9" fill="#fff" stroke="${ink}" stroke-width=".6"/>`;return {svg:`<rect x="${cx-24}" y="${py-9}" width="48" height="19" rx="3" fill="${c||'#2b2b36'}" stroke="${ink}" stroke-width="2"/>${k}<circle cx="${cx-16}" cy="${py-5}" r="2" fill="#00f0ff"/><circle cx="${cx-9}" cy="${py-5}" r="2" fill="#ff4fa3"/><circle class="swing" cx="${cx+14}" cy="${py-5}" r="2" fill="#b6ff3b"/>`,paws:[[cx-12,py+1],[cx+12,py-2]]};},
