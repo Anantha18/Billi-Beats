@@ -9,7 +9,7 @@ export async function api(path,data){
   try{
     const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),6000);
     const r=await fetch('/api/'+path,data?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({dev:dev},data)),signal:ctl.signal}:{signal:ctl.signal});
-    clearTimeout(to);
+    clearTimeout(to);net.last=r.status;
     if(r.status===503||r.status===404&&!data&&path.indexOf('mix')!==0){net.on=false;return null;}
     if(r.status===204)return {};
     const j=await r.json().catch(()=>null);

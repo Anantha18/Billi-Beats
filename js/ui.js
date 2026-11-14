@@ -25,7 +25,7 @@ const cache={};
 const INST={'s.solo':'guitar','s.riff':'guitar','p.gtr':'guitar','d.wah':'guitar','s.bass':'guitar','p.bass':'guitar','c.bass':'guitar','d.octave':'guitar','p.uke':'guitar',
   'r.sitar':'sitar','d.sitar':'sitar','g.tara':'sitar','c.veena':'sitar','s.rubab':'sitar','c.tambura':'sitar','f.tanpura':'sitar','s.drone':'sitar',
   'c.violin':'violin','d.strings':'violin','f.sarangi':'violin','s.sarangi':'violin','p.cello':'upright','d.walk':'upright'};
-let slotEls=[],adds=0,beatFlip=false,pub=null,heard=0,listenSent=false;
+let slotEls=[],adds=0,beatFlip=false,pub=null,heard=0,listenSent=false,nav=0;
 
 export async function loadGenre(k){
   if(cache[k])return cache[k];
@@ -71,7 +71,7 @@ async function loadHomeChart(){
 }
 function show(view){
   $('home').hidden=view!=='home';$('band').hidden=view!=='band';
-  if(view==='home'){if(S.playing)pause();try{history.replaceState(null,'',location.pathname);}catch(e){}loadHomeChart();}
+  if(view==='home'){nav++;pub=null;if(S.playing)pause();try{history.replaceState(null,'',location.pathname);}catch(e){}loadHomeChart();}
   window.scrollTo(0,0);
 }
 
@@ -258,11 +258,13 @@ function openShare(){
 async function doPublish(){
   const code=pubCode();
   if(code.replace(/x/g,'').length<2){toast('A band needs at least two cats (not counting your voice).');return;}
-  const [a,b]=nameIdx(),btn=$('publish');btn.disabled=true;btn.textContent='Publishing…';
-  const r=await api('publish',{g:S.pack.key,code:code,a:a,b:b});
+  const [a,b]=nameIdx(),btn=$('publish'),g=S.pack.key,my=nav;btn.disabled=true;btn.textContent='Publishing…';
+  const r=await api('publish',{g:g,code:code,a:a,b:b});
   btn.disabled=false;btn.textContent='Publish to chart';
-  if(!r||!r.id){toast(net.on===false?'The chart is not open yet.':'Could not publish. Check your connection and try again.');renderShare();return;}
+  if(my!==nav||S.pack.key!==g||pubCode()!==code)return; // the band changed while publishing
+  if(!r||!r.id){toast(net.on===false?'The chart is not open yet.':net.last===429?'Too many bands published from this network today. Try again tomorrow.':'Could not publish. Check your connection and try again.');renderShare();return;}
   const m=await api('mix?id='+r.id);
+  if(my!==nav||S.pack.key!==g||pubCode()!==code)return;
   pub={id:r.id,code:code,a:m?m.a:a,b:m?m.b:b,n:m?m.n:0,rank:m?m.rank:null,mine:true};listenSent=true;
   try{history.replaceState(null,'','#m-'+pub.id);}catch(e){}
   track('publish',{genre:S.pack.key});renderShare();toast('Published. Share the link to collect listens.');
@@ -304,10 +306,11 @@ async function openChart(){
   $('chartlist').innerHTML=!r?'<p class="emptyc">The chart is not open yet. It will appear here soon.</p>':r.items.length?chartRows(r.items,false):'<p class="emptyc">No bands here yet this week. Build one, tap Share, then Publish.</p>';
 }
 async function openPublished(id){
-  const m=await api('mix?id='+id);
+  const my=++nav,m=await api('mix?id='+id);
+  if(my!==nav)return true; // the player has moved on; ignore this late answer
   if(!m||!hasGenre(m.g))return false;
   await openGenre(m.g,fromCode(m.code));
-  pub={id:m.id,code:m.code,a:m.a,b:m.b,n:m.n,rank:m.rank};heard=0;listenSent=false;
+  pub={id:m.id,code:m.code,a:m.a,b:m.b,n:m.n,rank:m.rank,ts:m.ts,tk:m.tk};heard=0;listenSent=false;
   try{history.replaceState(null,'','#m-'+m.id);}catch(e){}
   renderPubBar();$('hint').textContent=`You are listening to "${bandName()}". Tap Bajao to play it.`;
   track('mix_load',{genre:m.g});return true;
@@ -316,7 +319,7 @@ async function openPublished(id){
 /* ---------- genre and mix ---------- */
 export async function openGenre(k,slots){
   if(S.playing)pause();
-  const p=await loadGenre(k);S.pack=p;S.comboOn={};SC.run++;$('banner').classList.remove('show');pub=null;
+  nav++;const p=await loadGenre(k);S.pack=p;S.comboOn={};SC.run++;$('banner').classList.remove('show');pub=null;
   S.slots=slots?slots.slice(0,7).map((s,i,a)=>(s>=0&&s<p.cats.length&&a.indexOf(s)===i&&(s!==VOICE_I||hasVoice()))?s:-1):EMPTY();
   while(S.slots.length<7)S.slots.push(-1);S.muted=[0,0,0,0,0,0,0];
   const b=document.documentElement;b.style.setProperty('--g1',p.theme.c1);b.style.setProperty('--g2',p.theme.c2);
@@ -326,7 +329,7 @@ export async function openGenre(k,slots){
 export async function loadMix(m){if(!m||!hasGenre(m.k))return false;await openGenre(m.k,m.slots);return true;}
 async function route(){
   const h=location.hash,pm=/^#m-([a-z0-9]{6})$/.exec(h);
-  if(pm){if(pub&&pub.id===pm[1])return true;return openPublished(pm[1]);}
+  if(pm){if(pub&&pub.id===pm[1]&&!$('band').hidden)return true;const ok=await openPublished(pm[1]);if(!ok)toast(net.on===false?'The chart is offline right now. Try the link again later.':'That band could not be found.');return ok;}
   const m=parseCode(h);
   if(m){if(S.pack&&!$('band').hidden&&('mix-'+m.k+'-'+m.slots.map(s=>s<0?'x':s.toString(36)).join(''))===mixCode())return true;if(await loadMix(m)){track('mix_load',{genre:m.k});return true;}}
   return false;
@@ -338,7 +341,7 @@ export async function start(){
   buildStage();initTray();initShare();
   hooks.hit=i=>{const el=slotEls[i];el.classList.add('hit');clearTimeout(el._h);el._h=setTimeout(()=>el.classList.remove('hit'),120);};
   hooks.beat=()=>{beatFlip=!beatFlip;$('stage').classList.toggle('beat',beatFlip);};
-  hooks.state=()=>{$('play').textContent=S.playing?'Ruko':'Bajao';$('play').setAttribute('aria-pressed',S.playing);};
+  hooks.state=()=>{$('play').textContent=S.playing?'Ruko':'Bajao';$('play').setAttribute('aria-pressed',S.playing);document.body.classList.toggle('playing',S.playing);};
   hooks.start=checkCombos;
   $('play').addEventListener('click',()=>{if(!S.playing&&S.slots.every(x=>x<0)){unlockAudio();toast('Pick a cat from the shelves below first.');return;}S.playing?pause():play();});
   $('clr').addEventListener('click',()=>{S.slots=EMPTY();S.muted=[0,0,0,0,0,0,0];renderAll();checkCombos();changed();});
@@ -356,8 +359,8 @@ export async function start(){
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&S.playing)pause();});
   // A listen counts once this phone has actually played a published band for 15 seconds.
   setInterval(()=>{
-    if(!pub||pub.mine||listenSent||!S.playing||!A.ac||A.ac.state!=='running'||pub.code!==pubCode())return;
-    if(++heard>=15){listenSent=true;api('listen',{id:pub.id}).then(r=>{if(r&&r.counted){pub.n=r.n;renderPubBar();}});}
+    if(!pub||pub.mine||listenSent||!S.playing||!A.ac||A.ac.state!=='running'||pub.code!==pubCode()||!S.slots.some((s,i)=>s>=0&&!S.muted[i]))return;
+    if(++heard>=15){listenSent=true;api('listen',{id:pub.id,ts:pub.ts,tk:pub.tk}).then(r=>{if(r&&r.counted){pub.n=r.n;renderPubBar();}});}
   },1000);
   // Personality: every so often one cat on stage does its quirk, and cats blink at random.
   if(!reduce)setInterval(()=>{
