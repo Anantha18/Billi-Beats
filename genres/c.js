@@ -1,12 +1,12 @@
 // Carnatic Fusion: 110 BPM, eight-beat cycle, in a Mayamalavagowla-style scale on D. Every tune here is original.
 import {V,mkfq,drum,mel,chords,at,syl} from '../js/engine.js';
-const aha=(t,o)=>{V.vox(t,o,196,.13,'a','a',.4);V.vox(t+.17,o,247,.26,'a','a',.42,220);};
+const aha=(t,o)=>{V.vox(t,o,196,.13,'a','a',.4);V.vox(t+.17,o,233,.26,'a','a',.42,220);};
 export default {
   key:'c',title:'Carnatic Fusion',tag:'Kutcheri meets groove · 110 BPM',blurb:'Sabha-la semma jam.',L:32,bar:16,sd:60/110/4,sw:0,fq:mkfq([0,1,4,5,7,8,11]),
   theme:{bg:'carnatic',c1:'#ffb000',c2:'#b3274a'},lead:['mrid','veena','konna'],
   cats:[
    {id:'mrid',name:'Mridangam Mani',fur:'#8a5a3c',fur2:'#5e3a22',belly:'#c79c7a',y0:50,hw:36,er:11,pat:'stripe',cloth:{c:'#fff',m:'veshti'},acc:['vibhuti'],prop:'dhol',pc:'#5e3a22',ex:'happy',quirk:'hop',rev:.1,
-    play:drum('D.tkD.t.DktkD.tt D.tkD.t.DkDktktk',{D:(t,o)=>{V.ge(t,o,.6,88,1.35,.24);V.na(t,o,.34,587,.1);},t:(t,o)=>V.na(t,o,.4,587,.1),k:(t,o)=>V.tak(t,o,.3,640,.035)})},
+    play:drum('D.tkt.t.tktkt.tt D.tkt.t.DkDktktk',{D:(t,o)=>{V.ge(t,o,.6,88,1.35,.24);V.na(t,o,.34,587,.1);},t:(t,o)=>V.na(t,o,.4,587,.1),k:(t,o)=>V.tak(t,o,.3,640,.035)})},
    {id:'ghatam',name:'Ghatam Giri',fur:'#9aa0a8',fur2:'#6c727a',belly:'#d8dce2',y0:60,hw:35,er:10.5,pat:'stripe',cloth:{c:'#fff',m:'veshti',c2:'#b3274a'},acc:['vibhuti','moustache'],prop:'pot',ex:'grumpy',quirk:'yawn',rev:.15,
     play:drum('g.gG.g.gG.gG.gG. g.gG.g.gG.gGgGGG',{g:(t,o)=>V.ghat(t,o,.5,196),G:(t,o)=>V.ghat(t,o,.68,294)})},
    {id:'tambura',name:'Tambura Thatha',fur:'#fbf6ee',belly:'#fff',y0:28,hw:28,er:9.5,cloth:{c:'#fff',m:'veshti'},acc:['vibhuti','specs'],prop:'strings',ex:'sleepy',quirk:'yawn',rev:.45,
@@ -26,7 +26,7 @@ export default {
    {id:'kit',name:'Drumkit Deepak',fur:'#4b5d7a',fur2:'#33415a',belly:'#8fa0bd',y0:42,hw:34,er:11,cloth:{c:'#262026',m:'vest'},acc:['headband:#ffb000','earring'],prop:'sticks',ex:'smug',quirk:'tilt',rev:.06,
     play:drum('K.h.S.hKK.h.S.h. K.h.S.hKK.hKS.SS',{K:(t,o)=>V.kick(t,o,.9,150,48,.3),S:(t,o)=>V.snare(t,o,.55),h:(t,o)=>V.hiss(t,o,.22,.04)})},
    {id:'synth',name:'Synth Sundar',fur:'#c9a7d8',fur2:'#a37fb8',y0:24,hw:27,er:10.5,tail:1,cloth:{c:'#454a5c',m:'hoodie'},acc:['specs','vibhuti'],prop:'keys',ex:'side',quirk:'tilt',rev:0,
-    play:mel(32,2,[[0,0,8],[8,4,8],[16,0,8],[24,3,4],[28,4,4]],(t,o,f,d)=>V.sub(t,o,f,d*.93,.56))},
+    play:mel(32,2,[[0,0,8],[8,0,8],[16,0,8],[24,0,4],[28,4,4]],(t,o,f,d)=>V.sub(t,o,f,d*.93,.56))},
    {id:'morsing',name:'Morsing Murthy',fur:'#b9793f',fur2:'#8a5424',belly:'#e6c39a',y0:58,hw:31,er:11.5,pat:'stripe',cloth:{c:'#fff',m:'veshti'},acc:['vibhuti'],prop:'clap',ex:'manic',quirk:'hop',rev:.12,
     play:drum('M.mM.mM.mMmm.mM. M.mM.mMmmMmMMmMm',{M:(t,o)=>V.twang(t,o,146.8,.16,.36,2600),m:(t,o)=>V.twang(t,o,146.8,.1,.22,1500)})},
    {id:'nadas',name:'Nadas Nandu',fur:'#f6d046',fur2:'#d99a1f',belly:'#fff0b8',y0:36,hw:33,er:11,pat:'stripe',tail:1,cloth:{c:'#fff',m:'veshti',c2:'#b3274a'},acc:['vibhuti'],prop:'horn',ex:'happy',quirk:'hop',rev:.35,

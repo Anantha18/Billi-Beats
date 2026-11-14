@@ -2,7 +2,7 @@
 import {V,mkfq,drum,mel,chords,at,syl} from '../js/engine.js';
 const arp=[],sh=[[0,2,4,7],[0,2,4,7],[-2,0,2,5],[-3,-1,2,4]],ord=[0,1,2,3,2,1,2,3];
 for(let s=0;s<32;s++)arp.push([s,sh[Math.floor(s/8)][ord[s%8]]]);
-const acid=[[0,0],[1,0],[2,7],[3,0],[4,3],[5,0],[6,0],[7,10],[8,0],[9,0],[10,7],[11,0],[12,5],[13,0],[14,3],[15,7],[16,0],[17,0],[18,7],[19,0],[20,3],[21,0],[22,0],[23,12],[24,-2],[25,-2],[26,5],[27,-2],[28,3],[29,-2],[30,5],[31,7]];
+const acid=[[0,0],[1,0],[2,7],[3,0],[4,3],[5,0],[6,0],[7,10],[8,0],[9,0],[10,7],[11,0],[12,5],[13,0],[14,3],[15,7],[16,0],[17,0],[18,7],[19,0],[20,3],[21,0],[22,0],[23,12],[24,-3],[25,-3],[26,4],[27,-3],[28,3],[29,-3],[30,4],[31,7]];
 let ai=0;
 export default {
   key:'g',title:'Goa Techno',tag:'Four-on-the-floor · 128 BPM',blurb:'Beach, bass aur billi.',L:32,bar:16,sd:60/128/4,sw:0,fq:mkfq([0,2,3,5,7,8,10],7),
@@ -15,7 +15,7 @@ export default {
    {id:'acid',name:'Visor Vicky',fur:'#fbf6ee',fur2:'#e8833a',patch:'#2b2326',y0:30,hw:30,er:11,cloth:{c:'#b6ff3b',m:'mesh'},acc:['visor'],prop:'keys',ex:'happy',quirk:'tilt',rev:.12,
     play:mel(32,2,acid,(t,o,f,d)=>V.acid(t,o,f*2,d*.9,.26,(ai++)%3===2))},
    {id:'roll',name:'Bassline Bablu',fur:'#2b2630',ink:'#0c0a0c',iris:'#ff4fa3',lidc:'#2b2630',y0:54,hw:36,er:11,cloth:{c:'#7b5cff',m:'tiedye'},acc:['mohawk:#b6ff3b'],prop:'pads',ex:'grumpy',quirk:'yawn',rev:0,
-    play:mel(32,2,[[2,0,2],[6,0,2],[10,0,2],[14,0,2],[18,-2,2],[22,-2,2],[26,-4,2],[30,-3,2]],(t,o,f,d)=>V.sub(t,o,f,d*.8,.62))},
+    play:mel(32,2,[[2,0,2],[6,0,2],[10,0,2],[14,0,2],[18,-2,2],[22,-2,2],[26,-3,2],[30,-3,2]],(t,o,f,d)=>V.sub(t,o,f,d*.8,.62))},
    {id:'arp',name:'Neon Nimbu',fur:'#f6d046',fur2:'#d99a1f',y0:6,hw:22,er:9.5,pat:'stripe',tail:1,acc:['headphones','bandana'],prop:'vinyl',ex:'star',quirk:'tail',rev:.3,
     play:mel(32,4,arp,(t,o,f)=>V.pluck(t,o,f,.16,.15,'sawtooth',5))},
    {id:'stab',name:'Sunrise Simran',fur:'#fbf6ee',belly:'#fff',y0:36,hw:29,er:10.5,tail:1,cloth:{c:'#ff9a1f',m:'tiedye'},acc:['flower:#ff4fa3'],prop:'keys',pc:'#ff4fa3',ex:'sleepy',quirk:'tilt',rev:.4,
@@ -29,9 +29,9 @@ export default {
    {id:'shaker',name:'Shaker Shanti',fur:'#efd9a8',fur2:'#c9a25e',y0:38,hw:26,er:10,tail:1,cloth:{c:'#7b5cff',m:'mesh'},acc:['crown'],prop:'shaker',pc:'#b6ff3b',ex:'sleepy',quirk:'tilt',rev:.1,
     play:drum('sSsSsSsSsSsSsSsS sSsSsSsSsSsSsSsS',{s:(t,o)=>V.shk(t,o,.16,.05),S:(t,o)=>V.shk(t,o,.26,.06)})},
    {id:'wob',name:'Wobble Wasim',fur:'#2fa87a',fur2:'#1c7a56',belly:'#a8e6c8',iris:'#ffd23f',y0:50,hw:37,er:12.5,cloth:{c:'#262026',m:'mesh'},acc:['headphones:#ff6a2b'],prop:'pads',ex:'manic',quirk:'yawn',rev:0,
-    play:mel(32,2,[[0,0,8],[8,0,4],[12,3,4],[16,-2,8],[24,-4,4],[28,-3,4]],(t,o,f,d,p,x)=>V.wob(t,o,f*2,d*.95,.3,128/60*2))},
+    play:mel(32,2,[[0,0,8],[8,0,8],[16,-2,8],[24,-3,8]],(t,o,f,d,p,x)=>V.wob(t,o,f*2,d*.95,.3,128/60*2))},
    {id:'psy',name:'Psy Pandu',fur:'#7b5cff',fur2:'#5a3fd6',belly:'#c9bdf2',y0:26,hw:26,er:11,pat:'spot',tail:1,acc:['specs','headband:#ff4fa3'],prop:'keys',pc:'#ff4fa3',ex:'happy',quirk:'hop',rev:.03,
-    play:(s,t,o,p)=>{const k=s%32;if(k%4===0)return 0;V.pluck(t,o,p.fq(k<16?0:(k<24?-2:-3),2)*2,.085,.36,'sawtooth',3);return 1;}},
+    play:(s,t,o,p)=>{const k=s%32;if(k%4===0)return 0;V.pluck(t,o,p.fq(k<16?0:(k<24?-2:-3),2)*2,.085,.6,'sawtooth',3);return 1;}},
    {id:'siren',name:'Siren Sonu',fur:'#fbf6ee',fur2:'#e63946',patch:'#e63946',y0:18,hw:25,er:10.5,tail:1,cloth:{c:'#00f0ff',m:'tiedye'},acc:['mohawk:#ff4fa3'],prop:'laser',ex:'star',quirk:'tail',rev:.3,
     play:mel(32,4,[[0,7,2],[3,7,1],[4,9,2],[8,7,2],[11,4,1],[12,5,3],[16,7,2],[19,7,1],[20,10,2],[24,9,2],[27,7,1],[28,4,3]],(t,o,f,d,p)=>V.lead(t,o,f,d*.85,.11,p))},
    {id:'tara',name:'Trance Tara',fur:'#c9a7d8',fur2:'#a37fb8',belly:'#efe2f5',y0:44,hw:28,er:11,cloth:{c:'#ffd23f',m:'bandhani'},acc:['bindi','jhumka','flower:#00f0ff'],prop:'strings',pc:'#ff4fa3',ex:'shy',quirk:'tilt',rev:.4,

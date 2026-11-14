@@ -1,6 +1,6 @@
 // Desi Folk: dhol and dance at 104 BPM in D mixolydian.
 import {V,mkfq,drum,mel,chords,at,syl} from '../js/engine.js';
-const hoi=(t,o)=>{V.cons(t,o,'h',.3);V.vox(t+.02,o,330,.16,'o','i',.45,300);};
+const hoi=(t,o)=>{V.cons(t,o,'h',.3);V.vox(t+.02,o,330,.16,'o','i',.45,294);};
 export default {
   key:'f',title:'Desi Folk',tag:'Dhol and dance · 104 BPM',blurb:'Mela laga hai, billi naachi hai.',L:32,bar:16,sd:60/104/4,sw:.14,fq:mkfq([0,2,4,5,7,9,10]),
   theme:{bg:'folk',c1:'#ffc21a',c2:'#ff3d86'},lead:['dhol','shehnai','hoi'],
@@ -22,7 +22,7 @@ export default {
    {id:'alaap',name:'Alaap Amma',fur:'#fbf6ee',belly:'#fff',y0:52,hw:32,er:9.5,cloth:{c:'#7b3fa0',m:'bandhani'},acc:['specs','bindi','gajra'],ex:'sleepy',quirk:'tilt',rev:.5,
     play:mel(32,3,[[0,4,7],[8,2,7],[16,3,7],[24,4,7]],(t,o,f,d)=>V.vox(t,o,f,d,'a','o',.24))},
    {id:'dholak',name:'Dholak Dulari',fur:'#efd9a8',fur2:'#c9a25e',belly:'#fbf0d6',y0:56,hw:33,er:11,cloth:{c:'#e63946',m:'bandhani'},acc:['bindi','flower:#ffc21a'],prop:'drums',pc:'#8a5424',ex:'happy',quirk:'hop',rev:.1,
-    play:drum('g.nng.n.g.nng.nn g.nng.n.gnngnnnn',{g:(t,o)=>V.ge(t,o,.55,95,1.5,.22),n:(t,o)=>V.na(t,o,.36,520,.09)})},
+    play:drum('g.nng.n.g.nng.nn g.nng.n.gnngnnnn',{g:(t,o)=>V.ge(t,o,.55,67,1.5,.22),n:(t,o)=>V.na(t,o,.36,520,.09)})},
    {id:'khartal',name:'Khartal Kaka',fur:'#8a5a3c',fur2:'#5e3a22',belly:'#c79c7a',y0:24,hw:26,er:10,pat:'stripe',tail:1,cloth:{c:'#fff4dc',m:'kurta'},acc:['topi:#e63946','moustache'],prop:'clap',ex:'side',quirk:'tilt',rev:.1,
     play:drum('w.ww.w.ww.ww.w.w w.ww.w.ww.wwwwww',{w:(t,o)=>V.wood(t,o,.42,1300)})},
    {id:'tanpura',name:'Tanpura Tai',fur:'#fbf6ee',belly:'#fff',y0:30,hw:28,er:10,cloth:{c:'#12a08a',m:'bandhani'},acc:['bindi','jhumka','gajra'],prop:'strings',ex:'sleepy',quirk:'tilt',rev:.4,

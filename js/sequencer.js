@@ -41,6 +41,7 @@ function frame(){
 export function play(){
   unlockAudio();
   if(S.playing)return;
+  A.master.gain.setTargetAtTime(.45*(S.pack.trim||1),A.ac.currentTime,.02);
   S.playing=true;S.t0=A.ac.currentTime+.08;S.stepIdx=0;S.vq=[];
   timer=setInterval(tick,25);tick();
   hooks.state&&hooks.state();

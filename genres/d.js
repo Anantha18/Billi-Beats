@@ -2,9 +2,9 @@
 import {V,mkfq,drum,mel,chords,at,syl} from '../js/engine.js';
 const roots=[0,0,0,0,-2,-2,-2,-2,-1,-1,-1,-1,0,0,0,0],oct=[];
 for(let i=0;i<16;i++)oct.push([i*2,roots[i]+(i%2?7:0)]);
-const aha=(t,o)=>{V.vox(t,o,330,.12,'a','a',.4);V.vox(t+.16,o,415,.22,'a','a',.4,392);};
+const aha=(t,o)=>{V.vox(t,o,330,.12,'a','a',.4);V.vox(t+.16,o,392,.22,'a','a',.4);};
 export default {
-  key:'d',title:'Retro Filmy',tag:'Disco · 116 BPM',blurb:'Bell-bottom pehno, billi aa rahi hai.',L:32,bar:16,sd:60/116/4,sw:.06,fq:mkfq([0,2,3,5,7,8,10],2),
+  key:'d',trim:1.58,title:'Retro Filmy',tag:'Disco · 116 BPM',blurb:'Bell-bottom pehno, billi aa rahi hai.',L:32,bar:16,sd:60/116/4,sw:.06,fq:mkfq([0,2,3,5,7,8,10],2),
   theme:{bg:'retro',c1:'#ffd23f',c2:'#ff3d86'},lead:['disco','octave','brass'],
   cats:[
    {id:'disco',name:'Disco Deva',fur:'#f2a541',fur2:'#c9681c',y0:24,hw:29,er:10.5,tail:1,cloth:{c:'#fff',m:'suit',c2:'#ff3d86'},acc:['bouffant','aviators'],prop:'disco',ex:'cool',quirk:'tilt',rev:.08,
@@ -26,11 +26,11 @@ export default {
    {id:'tamb',name:'Tambourine Tina',fur:'#fbf6ee',fur2:'#c9a7d8',patch:'#c9a7d8',y0:44,hw:27,er:11,tail:1,cloth:{c:'#ffd23f',m:'polka'},acc:['longhair:#5a3520','flower:#ff3d86'],prop:'manjira',ex:'happy',quirk:'hop',rev:.15,
     play:drum('j.j.J.j.j.j.J.jj j.j.J.j.j.jjJ.jj',{j:(t,o)=>V.jing(t,o,.2,.06),J:(t,o)=>V.jing(t,o,.36,.12)})},
    {id:'taali',name:'Taali Tillu',fur:'#9aa0a8',fur2:'#6c727a',belly:'#d8dce2',y0:64,hw:31,er:11.5,pat:'stripe',cloth:{c:'#ff6a2b',m:'stripe',c2:'#ffd23f'},acc:['sidepart'],prop:'clap',ex:'star',quirk:'hop',rev:.2,
-    play:drum('....c.......c.c. ....c.......cccc',{c:(t,o)=>V.clap(t,o,.5)})},
+    play:drum('....c.......c.c. ....c.......cccc',{c:(t,o)=>V.clap(t,o,.9)})},
    {id:'synb',name:'Synth Sardar',fur:'#8a5a3c',fur2:'#5e3a22',belly:'#c79c7a',y0:40,hw:33,er:10.5,cloth:{c:'#7b3fa0',m:'suit',c2:'#ffd23f'},acc:['pagri:#ff3d86','aviators:#7b3fa0'],prop:'keys',pc:'#ff3d86',ex:'cool',quirk:'tilt',rev:.03,
     play:mel(32,2,[[0,0,1],[3,0,1],[6,0,2],[8,-2,1],[11,-2,1],[14,-2,2],[16,-1,1],[19,-1,1],[22,-1,2],[24,0,1],[27,0,1],[30,7,2]],(t,o,f,d)=>V.acid(t,o,f*2,d*.9+.06,.3,0))},
    {id:'walk',name:'Bass Dadu',fur:'#fbf6ee',belly:'#fff',y0:20,hw:27,er:9.5,cloth:{c:'#454a5c',m:'vest'},acc:['specs','bowtie:#e63946','moustache'],prop:'strings',pc:'#8a5424',ex:'sleepy',quirk:'yawn',rev:.08,
-    play:mel(32,2,[[0,0,4],[4,4,4],[8,-2,4],[12,2,4],[16,-1,4],[20,3,4],[24,0,4],[28,-3,4]],(t,o,f,d)=>V.pluck(t,o,f,d*.8,.5,'triangle',5))},
+    play:mel(32,2,[[0,0,4],[4,4,4],[8,-2,4],[12,2,4],[16,-1,4],[20,3,4],[24,0,4],[28,-3,4]],(t,o,f,d)=>V.pluck(t,o,f,d*.8,.5,'sawtooth',7))},
    {id:'sitar',name:'Sitar Sundari',fur:'#efd9a8',fur2:'#c9a25e',y0:34,hw:27,er:11,pat:'stripe',tail:1,cloth:{c:'#12c2b0',m:'sequin'},acc:['bindi','jhumka','gajra'],prop:'strings',ex:'smug',quirk:'tail',rev:.4,
     play:mel(32,3,[[6,7],[7,6],[8,4,3],[14,2],[15,4,2],[22,6],[23,4],[24,3,3],[29,4],[30,7,2]],(t,o,f,d)=>{V.pluck(t,o,f,d+.3,.28,'sawtooth',8,-.03);V.pluck(t,o,f*2,d+.1,.06,'sawtooth',6);})},
    {id:'wah',name:'Wah-Wah Wahid',fur:'#262026',ink:'#0c0a0c',iris:'#ffd23f',lidc:'#262026',y0:12,hw:24,er:10.5,tail:1,cloth:{c:'#ff6a2b',m:'polka'},acc:['longhair:#0c0a0c','headband:#ffd23f'],prop:'strings',pc:'#e63946',ex:'smug',quirk:'tilt',rev:.12,

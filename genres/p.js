@@ -14,7 +14,7 @@ export default {
    {id:'soft',name:'Lo-Fi Lalu',fur:'#9aa0a8',fur2:'#6c727a',belly:'#d8dce2',y0:52,hw:35,er:11,pat:'stripe',cloth:{c:'#7b5cff',m:'hoodie'},acc:['headphones:#ff8fab'],prop:'pads',ex:'sleepy',quirk:'yawn',rev:.1,
     play:drum('K.....r.K.K...r. K.....r.K.K..rr.',{K:(t,o)=>V.kick(t,o,.8,120,46,.3),r:(t,o)=>V.wood(t,o,.36,900)})},
    {id:'snap',name:'Snap Sneha',fur:'#efd9a8',fur2:'#c9a25e',belly:'#fbf0d6',y0:36,hw:27,er:11,tail:1,cloth:{c:'#ff8fab',m:'stripe',c2:'#fff'},acc:['specs','flower:#7b5cff'],prop:'clap',ex:'smug',quirk:'tilt',rev:.2,
-    play:drum('h.h.s.h.h.h.s.h. h.h.s.h.h.h.s.hh',{h:(t,o)=>V.hiss(t,o,.13,.03),s:(t,o)=>V.snap(t,o,.5)})},
+    play:drum('h.h.s.h.h.h.s.h. h.h.s.h.h.h.s.hh',{h:(t,o)=>V.hiss(t,o,.13,.03),s:(t,o)=>V.snap(t,o,.9)})},
    {id:'bass',name:'Bass Bittu',fur:'#e8792e',fur2:'#b9541a',belly:'#f8d2a6',y0:16,hw:25,er:10.5,pat:'stripe',tail:1,cloth:{c:'#12c2b0',m:'stripe',c2:'#fff'},acc:['beanie:#7b5cff'],prop:'strings',pc:'#ff8fab',ex:'happy',quirk:'tail',rev:.04,
     play:mel(32,2,bass,(t,o,f,d)=>V.pluck(t,o,f*2,d*.8+.05,.5,'triangle',4))},
    {id:'pad',name:'Dreamy Diya',fur:'#c9a7d8',fur2:'#a37fb8',belly:'#efe2f5',y0:44,hw:29,er:11.5,cloth:{c:'#ff8fab',m:'sequin'},acc:['crown'],prop:'keys',pc:'#7b5cff',ex:'shy',quirk:'tilt',rev:.5,
