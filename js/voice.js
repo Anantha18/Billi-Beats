@@ -1,7 +1,7 @@
 // Voice cat: record two seconds of the player's voice, pitch it into a cat voice and loop it on the beat.
 // The recording lives only in this page's memory. It is never uploaded and is gone on reload.
 import {A,unlockAudio} from './engine.js';
-export const VOICE_I=8;
+export const VOICE_I=16;
 export const STYLES=[{k:'kitten',label:'Kitten',rate:1.55},{k:'billa',label:'Billa',rate:.72},{k:'robo',label:'Robo',rate:1}];
 const V={buf:null,style:'kitten'};
 export const hasVoice=()=>!!V.buf;

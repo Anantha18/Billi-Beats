@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Billi Beats</title>
-<meta name="description" content="Pick a genre, build a band of desi cats, and share the track. Gully Rap, Goa Techno, Desi Folk and Retro Filmy.">
+<meta name="description" content="Pick a genre, build a band of desi cats, and share the track. Seven genres, 112 cats, and your own voice as a cat.">
 <meta property="og:title" content="Billi Beats: build a band of desi cats">
-<meta property="og:description" content="Gully Rap, Goa Techno, Desi Folk, Retro Filmy. Tap cats, make a track, find the secret combos.">
+<meta property="og:description" content="Gully Rap, Goa Techno, Desi Folk, Retro Filmy, Sufi Rock, Carnatic Fusion, Indie Pop. Tap cats, make a track, top the chart.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#170e33">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E">
@@ -104,7 +104,7 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .btn{border:2px solid var(--line);background:var(--panel);padding:8px 13px;border-radius:999px;font-weight:600;font-size:13.5px}
 .btn:hover{border-color:var(--chuna)}
 .hint{margin:0;font-size:13px;color:var(--muted)}
-.troph{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.troph{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .tro{border:2px dashed var(--line);border-radius:12px;padding:6px 10px;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);min-height:48px}
 .tro .faces{display:flex;flex:0 0 auto}
 .tro .faces svg{width:30px;height:30px;margin-left:-6px;border-radius:50%;background:var(--panel);overflow:hidden}
@@ -113,11 +113,12 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
 .tro.got{border-style:solid;border-color:var(--haldi);background:var(--haldi);color:var(--ink);font-weight:700}
 
 /* shelves */
-.tray{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px}
+.tray{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:760px){.tray{grid-template-columns:1fr 1fr;gap:12px 14px}}
 .grp h2{margin:0 0 5px;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;color:var(--c)}
-.chips{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .chip{touch-action:manipulation;user-select:none;-webkit-user-select:none;border:2px solid var(--c);background:var(--panel);border-radius:14px;padding:5px 3px 6px;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
-.chip svg{width:100%;max-width:74px;aspect-ratio:1;height:auto;overflow:hidden;transform:none;transition:none}
+.chip svg{width:100%;max-width:66px;aspect-ratio:1;height:auto;overflow:hidden;transform:none;transition:none}
 .chip span{font-size:11px;line-height:1.12;font-weight:600;text-align:center;overflow-wrap:break-word;max-width:100%;min-height:25px;display:flex;align-items:center}
 .chip.on{background:var(--c);color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
 .chip.nudge{animation:nudge 1.1s ease-in-out infinite;border-color:var(--chuna)}
@@ -182,7 +183,7 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
   .play{font-size:17px;padding:5px 14px;min-width:84px;box-shadow:0 3px 0 var(--g2)}
   .btn{padding:6px 10px;font-size:12.5px}
   .hint{font-size:12px}
-  .tro{font-size:11.5px;padding:5px 8px;min-height:42px}
+  .tro{font-size:10.5px;line-height:1.15;padding:5px 3px;min-height:42px;flex-direction:column;gap:2px;text-align:center}
   .tro .faces svg{width:26px;height:26px}
   .banner b{font-size:30px}.banner span{font-size:12px}
   .card .lbl b{font-size:19px}
@@ -202,7 +203,6 @@ button:focus-visible{outline:3px solid var(--chuna);outline-offset:2px}
       <p>Pick a genre. Build a band of cats. Drop the track.</p>
     </header>
     <div class="cards" id="cards" style="margin-top:16px"></div>
-    <p class="soonrow" style="margin-top:14px">Coming soon: <span id="soon" style="display:contents"></span></p>
     <section id="homechart" style="margin-top:22px" hidden>
       <h2 class="sech">Top bands this week</h2>
       <div class="clist" id="homelist"></div>

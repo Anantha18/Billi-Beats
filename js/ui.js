@@ -13,9 +13,11 @@ export const GENRES=[
   {k:'r',title:'Gully Rap',tag:'Boom-bap · 90 BPM',bg:'gully'},
   {k:'g',title:'Goa Techno',tag:'Four-on-the-floor · 128 BPM',bg:'goa'},
   {k:'f',title:'Desi Folk',tag:'Dhol and dance · 104 BPM',bg:'folk'},
-  {k:'d',title:'Retro Filmy',tag:'Disco · 116 BPM',bg:'retro'}
+  {k:'d',title:'Retro Filmy',tag:'Disco · 116 BPM',bg:'retro'},
+  {k:'s',title:'Sufi Rock',tag:'Qawwali meets guitar · 96 BPM',bg:'sufi'},
+  {k:'c',title:'Carnatic Fusion',tag:'Kutcheri meets groove · 110 BPM',bg:'carnatic'},
+  {k:'p',title:'Indie Pop',tag:'Rooftop gig · 100 BPM',bg:'indie'}
 ];
-const SOON=['Sufi Rock','Carnatic Fusion','Indie Pop'];
 const SHELF=['Beat','Bass','Tune','Voice'],SHEX=['#ff6a2b','#12c2b0','#ffc21a','#ff3d86'];
 const EMPTY=()=>[-1,-1,-1,-1,-1,-1,-1];
 const cache={};
@@ -24,7 +26,8 @@ let slotEls=[],adds=0,beatFlip=false,pub=null,heard=0,listenSent=false;
 export async function loadGenre(k){
   if(cache[k])return cache[k];
   const p=(await import(`../genres/${k}.js`)).default;
-  p.cats.forEach((c,i)=>{c.i=i;c.g=Math.floor(i/2);});
+  // Cats 0-7 keep their original positions so old links still work; 8-15 are the second pair on each shelf.
+  p.cats.forEach((c,i)=>{c.i=i;c.g=Math.floor((i%8)/2);});
   const v=voiceCat();v.i=VOICE_I;v.g=4;p.cats.push(v);
   cache[k]=p;return p;
 }
@@ -45,11 +48,10 @@ async function buildHome(){
     b.addEventListener('click',()=>{preview(p);track('genre_open',{genre:g.k});openGenre(g.k);});
     box.appendChild(b);
   }
-  $('soon').innerHTML=SOON.map(t=>`<span class="pill">🔒 ${t}</span>`).join('');
 }
 function chartRows(items,showGenre){
   return items.map(it=>{const p=cache[it.g];if(!p)return '';
-    const faces=fromCode(it.code).filter(i=>i>=0&&i<8).slice(0,4).map(i=>faceSVG(p.cats[i])).join('');
+    const faces=fromCode(it.code).filter(i=>i>=0&&i<VOICE_I).slice(0,4).map(i=>faceSVG(p.cats[i])).join('');
     return `<button class="crow" data-id="${it.id}"><b class="rk">${it.rank}</b><span class="faces">${faces}</span><span class="cn"><b>${nameOf(p,it.a,it.b)}</b><i>${showGenre?p.title+' · ':''}${plural(it.w)} this week</i></span><span class="pl" aria-hidden="true">▶</span></button>`;}).join('');
 }
 async function loadHomeChart(){
@@ -90,7 +92,7 @@ export function renderAll(){
   for(let i=0;i<7;i++)renderSlot(i);
   const empty=S.slots.every(x=>x<0);
   document.querySelectorAll('.chip').forEach(c=>{const i=+c.dataset.i;c.classList.toggle('on',S.slots.indexOf(i)>=0);c.classList.toggle('nudge',empty&&i===0);});
-  $('hint').textContent=empty?`Start the band: tap ${S.pack.cats[0].name} below, then add more cats.`:'Tap a cat on stage to mute it. Two secret combos are hiding in this genre.';
+  $('hint').textContent=empty?`Start the band: tap ${S.pack.cats[0].name} below, then add more cats.`:'Tap a cat on stage to mute it. Three secret combos are hiding in this genre.';
   syncBuses();
 }
 function changed(){if(pub&&pub.code!==pubCode()){pub=null;renderPubBar();}}
@@ -212,7 +214,7 @@ function fire(cb){
 /* ---------- share, publish, story card ---------- */
 export const mixCode=()=>'mix-'+S.pack.key+'-'+S.slots.map(s=>s<0?'x':s.toString(36)).join('');
 // What gets published: the line-up without the voice cat, which never leaves the phone.
-const pubCode=()=>S.slots.map(s=>s<0||s===VOICE_I?'x':String(s)).join('');
+const pubCode=()=>S.slots.map(s=>s<0||s===VOICE_I?'x':s.toString(36)).join('');
 export function parseCode(str){const m=/mix-([a-z])-([0-9a-zx]{7})/i.exec(str||'');if(!m)return null;return {k:m[1].toLowerCase(),slots:fromCode(m[2].toLowerCase())};}
 function nameIdx(){
   const p=S.pack;let h=S.nameSeed*131+7;S.slots.forEach((s,i)=>{h=(h*31+(s+2)*(i+3))>>>0;});
@@ -332,8 +334,8 @@ export async function start(){
   $('play').addEventListener('click',()=>{if(!S.playing&&S.slots.every(x=>x<0)){unlockAudio();toast('Pick a cat from the shelves below first.');return;}S.playing?pause():play();});
   $('clr').addEventListener('click',()=>{S.slots=EMPTY();S.muted=[0,0,0,0,0,0,0];renderAll();checkCombos();changed();});
   $('shuf').addEventListener('click',()=>{
-    const pick=[];[0,1,2,3].forEach(g=>pick.push(g*2+Math.floor(Math.random()*2)));
-    const rest=[0,1,2,3,4,5,6,7].filter(i=>pick.indexOf(i)<0).sort(()=>Math.random()-.5);pick.push(rest[0],rest[1]);
+    const all=S.pack.cats.filter(c=>c.i<VOICE_I),pick=[];[0,1,2,3].forEach(g=>{const sh=all.filter(c=>c.g===g);pick.push(sh[Math.floor(Math.random()*sh.length)].i);});
+    const rest=all.map(c=>c.i).filter(i=>pick.indexOf(i)<0).sort(()=>Math.random()-.5);pick.push(rest[0],rest[1]);
     pick.sort(()=>Math.random()-.5);S.slots=EMPTY();pick.forEach((x,i)=>S.slots[i]=x);S.muted=[0,0,0,0,0,0,0];renderAll();changed();
     if(!S.playing)play();else checkCombos();
   });

@@ -1,5 +1,5 @@
 // Goa Techno: four-on-the-floor at 128 BPM in A minor.
-import {V,mkfq,drum,mel,chords,at} from '../js/engine.js';
+import {V,mkfq,drum,mel,chords,at,syl} from '../js/engine.js';
 const arp=[],sh=[[0,2,4,7],[0,2,4,7],[-2,0,2,5],[-3,-1,2,4]],ord=[0,1,2,3,2,1,2,3];
 for(let s=0;s<32;s++)arp.push([s,sh[Math.floor(s/8)][ord[s%8]]]);
 const acid=[[0,0],[1,0],[2,7],[3,0],[4,3],[5,0],[6,0],[7,10],[8,0],[9,0],[10,7],[11,0],[12,5],[13,0],[14,3],[15,7],[16,0],[17,0],[18,7],[19,0],[20,3],[21,0],[22,0],[23,12],[24,-2],[25,-2],[26,5],[27,-2],[28,3],[29,-2],[30,5],[31,7]];
@@ -23,11 +23,28 @@ export default {
    {id:'riser',name:'Riser Raja',fur:'#a2a7ad',fur2:'#62676e',y0:22,hw:26,er:11,pat:'stripe',acc:['led'],prop:'laser',ex:'manic',quirk:'hop',rev:.3,
     play:at(32,{0:(t,o)=>V.hiss(t,o,.3,.5),16:(t,o,sd)=>V.riser(t,o,.2,sd*15)})},
    {id:'meow',name:'Laser Lali',fur:'#efe2c8',mask:'#5a4032',iris:'#8fd3ff',y0:44,hw:27,er:10,tail:1,cloth:{c:'#ff4fa3',m:'sequin'},acc:['hearts'],prop:'mic',pc:'#00f0ff',ex:'star',quirk:'tail',rev:.45,
-    play:at(32,{3:(t,o)=>V.meow(t,o,440,.24,.28),11:(t,o)=>V.meow(t,o,523,.24,.28),19:(t,o)=>V.meow(t,o,440,.24,.28),27:(t,o)=>V.meow(t,o,659,.2,.28),29:(t,o)=>V.meow(t,o,587,.3,.28)})}
+    play:at(32,{3:(t,o)=>V.meow(t,o,440,.24,.28),11:(t,o)=>V.meow(t,o,523,.24,.28),19:(t,o)=>V.meow(t,o,440,.24,.28),27:(t,o)=>V.meow(t,o,659,.2,.28),29:(t,o)=>V.meow(t,o,587,.3,.28)})},
+   {id:'bongo',name:'Bongo Bholu',fur:'#b9793f',fur2:'#8a5424',belly:'#e6c39a',y0:60,hw:34,er:11.5,pat:'stripe',cloth:{c:'#ff6a2b',m:'tiedye'},acc:['headband:#b6ff3b'],prop:'drums',ex:'happy',quirk:'hop',rev:.12,
+    play:drum('..b.b..b..b.b.bb ..b.b..b.bb.b.bB',{b:(t,o)=>V.na(t,o,.36,330,.09),B:(t,o)=>V.na(t,o,.42,440,.1)})},
+   {id:'shaker',name:'Shaker Shanti',fur:'#efd9a8',fur2:'#c9a25e',y0:38,hw:26,er:10,tail:1,cloth:{c:'#7b5cff',m:'mesh'},acc:['crown'],prop:'shaker',pc:'#b6ff3b',ex:'sleepy',quirk:'tilt',rev:.1,
+    play:drum('sSsSsSsSsSsSsSsS sSsSsSsSsSsSsSsS',{s:(t,o)=>V.shk(t,o,.16,.05),S:(t,o)=>V.shk(t,o,.26,.06)})},
+   {id:'wob',name:'Wobble Wasim',fur:'#2fa87a',fur2:'#1c7a56',belly:'#a8e6c8',iris:'#ffd23f',y0:50,hw:37,er:12.5,cloth:{c:'#262026',m:'mesh'},acc:['headphones:#ff6a2b'],prop:'pads',ex:'manic',quirk:'yawn',rev:0,
+    play:mel(32,2,[[0,0,8],[8,0,4],[12,3,4],[16,-2,8],[24,-4,4],[28,-3,4]],(t,o,f,d,p,x)=>V.wob(t,o,f*2,d*.95,.3,128/60*2))},
+   {id:'psy',name:'Psy Pandu',fur:'#7b5cff',fur2:'#5a3fd6',belly:'#c9bdf2',y0:26,hw:26,er:11,pat:'spot',tail:1,acc:['visor'],prop:'keys',pc:'#ff4fa3',ex:'happy',quirk:'hop',rev:.03,
+    play:(s,t,o,p)=>{const k=s%32;if(k%4===0)return 0;V.pluck(t,o,p.fq(k<16?0:(k<24?-2:-3),2)*2,.085,.36,'sawtooth',3);return 1;}},
+   {id:'siren',name:'Siren Sonu',fur:'#fbf6ee',fur2:'#e63946',patch:'#e63946',y0:18,hw:25,er:10.5,tail:1,cloth:{c:'#00f0ff',m:'tiedye'},acc:['mohawk:#ff4fa3'],prop:'laser',ex:'star',quirk:'tail',rev:.3,
+    play:mel(32,4,[[0,7,2],[3,7,1],[4,9,2],[8,7,2],[11,4,1],[12,5,3],[16,7,2],[19,7,1],[20,10,2],[24,9,2],[27,7,1],[28,4,3]],(t,o,f,d,p)=>V.lead(t,o,f,d*.85,.11,p))},
+   {id:'tara',name:'Trance Tara',fur:'#c9a7d8',fur2:'#a37fb8',belly:'#efe2f5',y0:44,hw:28,er:11,cloth:{c:'#ffd23f',m:'bandhani'},acc:['bindi','jhumka','flower:#00f0ff'],prop:'strings',pc:'#ff4fa3',ex:'shy',quirk:'tilt',rev:.4,
+    play:mel(32,3,[[2,0],[4,4],[6,7,2],[10,6],[12,4,2],[18,0],[20,4],[22,8,2],[26,7],[28,4,3]],(t,o,f,d)=>{V.pluck(t,o,f,d+.3,.26,'sawtooth',8,-.03);V.pluck(t,o,f*2,d+.1,.05,'sawtooth',6);})},
+   {id:'robo',name:'Robo Rani',fur:'#bfc6cf',fur2:'#7d8590',belly:'#e8eaec',iris:'#00f0ff',y0:34,hw:29,er:11,cloth:{c:'#454a5c',m:'sequin'},acc:['led'],prop:'mic',pc:'#b6ff3b',ex:'side',quirk:'tilt',rev:.3,
+    play:at(32,{4:(t,o)=>V.vox(t,o,220,.1,'i','i',.34),6:(t,o)=>V.vox(t,o,220,.14,'i','i',.34),20:(t,o)=>V.vox(t,o,220,.1,'i','i',.34),22:(t,o)=>V.vox(t,o,220,.14,'i','i',.34),28:(t,o)=>V.vox(t,o,330,.3,'i','a',.34)})},
+   {id:'hey',name:'Hands-Up Harry',fur:'#f2a541',fur2:'#c9681c',belly:'#fbe3b8',y0:10,hw:23,er:10,pat:'stripe',tail:1,acc:['shadesUp','bandana:#00f0ff'],prop:'glow',ex:'happy',quirk:'hop',rev:.3,
+    play:at(32,{12:(t,o)=>{V.cons(t,o,'h',.3);V.vox(t+.02,o,330,.2,'e','i',.42,360);},28:(t,o)=>{V.cons(t,o,'h',.3);V.vox(t+.02,o,330,.16,'e','i',.42,360);},30:(t,o)=>{V.cons(t,o,'h',.3);V.vox(t+.02,o,392,.22,'e','i',.42,420);}})}
   ],
   combos:[
    {id:'sunrise',need:['kick','arp','stab'],name:'Sunrise Set',title:'SUNRISE SET!',sub:'Subah ho gayi, billi abhi bhi naach rahi hai.',fx:'fire'},
-   {id:'acid',need:['acid','hat','meow'],name:'Acid Billi',title:'ACID BILLI',sub:'Laser on. Whiskers up.',fx:'lamps'}
+   {id:'acid',need:['acid','hat','meow'],name:'Acid Billi',title:'ACID BILLI',sub:'Laser on. Whiskers up.',fx:'lamps'},
+   {id:'psy',need:['psy','siren','shaker'],name:'Psy Billi',title:'PSY BILLI!',sub:'Jungle party. Network nahi hai, bass hai.',fx:'bloom'}
   ],
   bandA:['Anjuna Meows','Beach Shack Billis','Neon Whiskers','Full Moon Felines','Susegad Cats','Laser Paws'],
   bandB:['Sunrise Set','b2b Glowstick Golu','All Night Long','Live At The Shack','128 BPM Club','& The Glow Sticks']

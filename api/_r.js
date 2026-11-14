@@ -8,15 +8,15 @@ export async function pipe(cmds){
   if(!r.ok)throw new Error('store '+r.status);
   return (await r.json()).map(x=>x.result);
 }
-export const GEN=['r','g','f','d'];
+export const GEN=['r','g','f','d','s','c','p'];
 const IST=19800e3;
 export const day=()=>Math.floor((Date.now()+IST)/864e5);
 // Weeks run Monday to Sunday, India time.
 export const week=()=>Math.floor((day()+3)/7);
 export const okDev=d=>typeof d==='string'&&/^[a-z0-9]{8,24}$/.test(d);
 export const okId=d=>typeof d==='string'&&/^[a-z0-9]{6}$/.test(d);
-// A band is 7 slots, each one of the genre's 8 cats or empty. The voice cat never leaves the phone.
-export const okCode=c=>typeof c==='string'&&/^[0-7x]{7}$/.test(c)&&c.replace(/x/g,'').length>=2&&new Set(c.replace(/x/g,'')).size===c.replace(/x/g,'').length;
+// A band is 7 slots, each one of the genre's 16 cats (0-9, a-f) or empty. The voice cat never leaves the phone.
+export const okCode=c=>typeof c==='string'&&/^[0-9a-fx]{7}$/.test(c)&&c.replace(/x/g,'').length>=2&&new Set(c.replace(/x/g,'')).size===c.replace(/x/g,'').length;
 export const okIdx=n=>Number.isInteger(n)&&n>=0&&n<50;
 export function ipKey(req){
   const ip=String(req.headers['x-forwarded-for']||'').split(',')[0].trim()||'0';

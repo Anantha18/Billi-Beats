@@ -97,3 +97,17 @@ V.acid=(t,o,f,d,v,acc)=>{const os=O('sawtooth',f,t,t+d+.05),lp=F('lowpass',300,a
 V.meow=(t,o,f,d,v)=>{d=d||.34;const os=O('sawtooth',f*.8,t,t+d+.1);os.frequency.linearRampToValueAtTime(f*1.25,t+d*.35);os.frequency.linearRampToValueAtTime(f*.85,t+d);const g=GS(t,v||.3,.03,d,.06);
   [[300,800],[2300,1250],[3000,2600]].forEach((p,i)=>{const b=F('bandpass',p[0],i?8:5);b.frequency.setValueAtTime(p[0],t);b.frequency.linearRampToValueAtTime(p[1],t+d*.5);b.frequency.linearRampToValueAtTime(i===0?450:p[1]*.8,t+d);chain(os,b,K([1.5,1.1,.5][i]),g);});g.connect(o);};
 V.scratch=(t,o,v)=>{const b=F('bandpass',700,5);b.frequency.setValueAtTime(700,t);b.frequency.exponentialRampToValueAtTime(3200,t+.06);b.frequency.exponentialRampToValueAtTime(600,t+.13);chain(N(t,t+.16),b,GS(t,v,.005,.1,.03),o);};
+
+// Voices for the expanded line-up
+let shaper=null;
+function drive(){if(!shaper){const n=1024,c=new Float32Array(n);for(let i=0;i<n;i++){const x=i/(n-1)*2-1;c[i]=Math.tanh(x*4);}shaper=c;}const w=ac.createWaveShaper();w.curve=shaper;return w;}
+// Distorted guitar. pm=1 gives a short palm-muted chug; power=1 adds the fifth for a power chord.
+V.gtr=(t,o,f,d,v,pm,power,from)=>{const w=drive(),lp=F('lowpass',pm?1100:3000,1.2),pre=K(.5),g=GS(t,v,.006,pm?Math.min(d,.09):d,pm?.03:.08);
+  (power?[1,1.5,2]:[1,2.005]).forEach((m,i)=>{const os=O('sawtooth',(from||f)*m,t,t+d+.2);if(from)os.frequency.exponentialRampToValueAtTime(f*m,t+.09);if(!pm&&!power)vib(os,5.5,f*m*.012,t+.15,t+d+.2);chain(os,K(i?.5:1),pre);});
+  chain(pre,w,lp,g,o);};
+V.bow=(t,o,f,d,v,from)=>{const os=O('sawtooth',from||f,t,t+d+.2);if(from)os.frequency.exponentialRampToValueAtTime(f,t+.09);vib(os,5.6,f*.014,t+.12,t+d+.2);const lp=F('lowpass',Math.min(f*5,4200),.8),pk=F('peaking',1200,1);pk.gain.value=5;chain(os,lp,pk,GS(t,v,.07,d,.12),o);};
+V.ep=(t,o,f,d,v)=>{chain(O('sine',f,t,t+d+.3),G(t,v,.004,d+.25),o);chain(O('sine',f*2,t,t+d+.1),G(t,v*.3,.004,d*.6+.08),o);chain(O('sine',f*7,t,t+.08),G(t,v*.12,.002,.05),o);};
+V.snap=(t,o,v)=>{chain(N(t,t+.05),F('bandpass',2400,3),G(t,v,.001,.03),o);chain(N(t+.012,t+.06),F('bandpass',3200,4),G(t+.012,v*.7,.001,.025),o);};
+V.tom=(t,o,v,f)=>{const os=O('sine',f*1.6,t,t+.3);os.frequency.exponentialRampToValueAtTime(f,t+.08);chain(os,G(t,v,.002,.22),o);chain(N(t,t+.03),F('bandpass',f*6,2),G(t,v*.3,.001,.015),o);};
+V.wob=(t,o,f,d,v,hz)=>{const os=O('sawtooth',f,t,t+d+.08),sq=O('square',f*.5,t,t+d+.08),lp=F('lowpass',500,7),l=O('sine',hz,t,t+d+.08),lg=K(380);chain(l,lg,lp.frequency);const g=GS(t,v,.01,d,.05);chain(os,lp,g,o);chain(sq,K(.5),lp);};
+V.shk=(t,o,v,d)=>{chain(N(t,t+d+.03),F('bandpass',6500,1.2),GS(t,v,.012,d*.5,d*.5),o);};
